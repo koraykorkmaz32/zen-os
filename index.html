@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zen OS | Personal Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #020617;
+            --panel: rgba(15, 23, 42, 0.7);
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        [data-theme="zen"] {
+            --bg: #f8fafc;
+            --panel: rgba(255, 255, 255, 0.8);
+            --accent: #10b981;
+            --text: #1e293b;
+            --border: rgba(0, 0, 0, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 20px; margin-bottom: 20px; border-radius: 24px;
+            background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border);
+        }
+
+        .grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 20px; }
+        .panel { 
+            background: var(--panel); backdrop-filter: blur(15px); 
+            border-radius: 28px; padding: 25px; border: 1px solid var(--border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .placeholder { border: 2px dashed var(--border); border-radius: 15px; height: 150px; display: flex; align-items: center; justify-content: center; opacity: 0.5; font-size: 0.8rem; }
+
+        button { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .theme-btn { background: var(--panel); border: 1px solid var(--border); color: var(--text); }
+
+        @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1 style="font-size: 1.2rem; font-weight: 800;">ZEN OS <span style="font-weight: 300; opacity: 0.5;">v1.0</span></h1>
+        <div style="display: flex; gap: 10px;">
+            <button class="theme-btn" onclick="toggleTheme()"><i data-lucide="sun"></i></button>
+            <button onclick="alert('Altyapı hazır, modüller yüklenecek!')">Giriş Sistemi</button>
+        </div>
+    </header>
+
+    <div class="grid">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="panel">
+                <h2><i data-lucide="cloud"></i> Hava Durumu</h2>
+                <div class="placeholder">Yükleniyor...</div>
+            </div>
+            <div class="panel">
+                <h2><i data-lucide="zap"></i> Focus Mode</h2>
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 10px;">25:00</div>
+                    <button style="width: 100%;">Başlat</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <h2><i data-lucide="calendar"></i> Takvim & Notlar</h2>
+            <div class="placeholder" style="height: 400px;">Takvim Izgarası Hazırlanıyor...</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="panel">
+                <h2><i data-lucide="trending-up"></i> Borsa</h2>
+                <div class="placeholder">Piyasa Verileri (Yakında)</div>
+            </div>
+            <div class="panel">
+                <h2><i data-lucide="wallet"></i> Finans</h2>
+                <div class="placeholder">Harcama Takibi (Yakında)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+    function toggleTheme() {
+        const b = document.body;
+        if (b.getAttribute('data-theme') === 'zen') {
+            b.removeAttribute('data-theme');
+        } else {
+            b.setAttribute('data-theme', 'zen');
+        }
+    }
+</script>
+</body>
+</html>
