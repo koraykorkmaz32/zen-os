@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zen OS | Command Center</title>
+    <title>Zen OS | Aesthetic Terminal</title>
     <link rel="manifest" href="data:application/manifest+json,{'name':'ZenOS','short_name':'ZenOS','start_url':'.','display':'standalone','background_color':'#020617','theme_color':'#38bdf8'}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -11,86 +11,90 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* --- 1. TASARIM VE DEĞİŞKENLER --- */
+        /* --- 1. TASARIM VE RENK PALETİ --- */
         :root {
             --bg: #020617; --panel: rgba(15, 23, 42, 0.85);
             --accent: #38bdf8; --text: #f8fafc; --border: rgba(255, 255, 255, 0.1);
         }
         [data-theme="zen"] {
-            --bg: #f8fafc; --panel: rgba(255, 255, 255, 0.98);
-            --accent: #10b981; --text: #1e293b; --border: rgba(0, 0, 0, 0.15);
+            --bg: #fff5f8; --panel: rgba(255, 255, 255, 0.98);
+            --accent: #ff7eb9; --text: #2d3436; --border: rgba(255, 126, 185, 0.2);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; min-height: 100vh; padding: 15px; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; min-height: 100vh; padding: 15px; user-select: none; }
         
-        /* Güvenlik: Kopyalamayı zorlaştır */
-        body { user-select: none; -webkit-user-select: none; }
-
         .container { max-width: 1700px; margin: 0 auto; }
         
-        /* GRID MİMARİSİ */
+        /* GRID MİMARİSİ (MASAÜSTÜ) */
         .grid-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        .panel { background: var(--panel); backdrop-filter: blur(15px); border-radius: 28px; padding: 22px; border: 1px solid var(--border); overflow: hidden; height: 100%; display: flex; flex-direction: column; }
-        h2 { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+        .panel { background: var(--panel); backdrop-filter: blur(15px); border-radius: 28px; padding: 22px; border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
 
         /* Üst Bar */
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 30px; background: var(--panel); border-radius: 20px; border: 1px solid var(--border); }
-        .welcome-text { font-size: 1.1rem; font-weight: 700; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 30px; background: var(--panel); border-radius: 24px; border: 1px solid var(--border); }
+        .welcome-text { font-size: 1.2rem; font-weight: 700; }
 
         /* SU TAKİBİ (DEV BARDAKLAR) */
-        .water-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 12px; width: 100%; margin-top: 5px; }
+        .water-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; width: 100%; margin-top: 5px; }
         .glass { 
-            aspect-ratio: 1/1.5; border: 3px solid var(--accent); border-radius: 6px 6px 18px 18px; 
+            aspect-ratio: 1/1.5; border: 3px solid var(--accent); border-radius: 8px 8px 20px 20px; 
             cursor: pointer; transition: 0.3s; background: rgba(56, 189, 248, 0.05); 
-            display: flex; align-items: center; justify-content: center; min-height: 70px;
+            display: flex; align-items: center; justify-content: center; min-height: 60px;
         }
         .glass.active { background: var(--accent); box-shadow: 0 0 25px var(--accent); transform: scale(0.92); }
-        .glass svg { width: 24px; height: 24px; color: var(--accent); }
+        .glass svg { width: 22px; height: 22px; color: var(--accent); }
         .glass.active svg { color: var(--bg); }
 
-        /* TAKVİM ÜST SEVİYE */
-        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; flex: 1; }
-        .cal-day { aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.8rem; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        /* TAKVİM (RENKLİ EMOJİLER) */
+        .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        .cal-day { aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
         .cal-day:hover { border-color: var(--accent); background: rgba(255,255,255,0.08); }
-        .cal-day.today { border: 2px solid var(--accent); color: var(--accent); font-weight: 800; }
-        .day-indicators { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; margin-top: 2px; }
-
-        /* 5 ÖĞÜNLÜK YEMEK PLANI */
-        .meal-table { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; width: 100%; }
-        .meal-day { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px; border: 1px solid var(--border); }
-        .meal-day h4 { font-size: 0.8rem; color: var(--accent); text-align: center; margin-bottom: 10px; }
-        .meal-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.7rem; padding: 6px; margin-bottom: 4px; }
-        .meal-label { font-size: 0.55rem; opacity: 0.4; display: block; }
-
-        /* HABIT TRACKER */
-        .habit-table { width: 100%; border-collapse: collapse; }
-        .check-box { width: 22px; height: 22px; border: 2px solid var(--accent); border-radius: 6px; cursor: pointer; margin: 0 auto; transition: 0.2s; }
-        .check-box.checked { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+        .cal-day.today { border: 2.5px solid var(--accent); color: var(--accent); font-weight: 800; }
+        .day-indicators { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; margin-top: 4px; font-size: 1.1rem; }
 
         /* UI ELEMANLARI */
-        .btn-primary { background: var(--accent); color: #000; border: none; padding: 10px 15px; border-radius: 12px; font-weight: 800; cursor: pointer; font-size: 0.8rem; }
-        .input-field { background: rgba(0,0,0,0.25); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 10px; width: 100%; }
+        .btn-primary { background: var(--accent); color: #000; border: none; padding: 12px 18px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 14px; cursor: pointer; }
+        .input-field { background: rgba(0,0,0,0.25); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; width: 100%; font-family: inherit; }
         .item-list { list-style: none; overflow-y: auto; flex: 1; }
-        .item { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 5px; font-size: 0.8rem; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-bottom: 6px; font-size: 0.85rem; }
 
         /* MODAL */
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .hidden { display: none !important; }
+        .emoji-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+        .emoji-btn { font-size: 1.5rem; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
+        .emoji-btn.active { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); }
 
-        /* MOBİL ADAPTASYON */
-        @media (max-width: 1200px) { .grid-layout { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 768px) { .grid-layout { grid-template-columns: 1fr; } .meal-table { grid-template-columns: repeat(2, 1fr); } }
+        /* YEMEK VE HABIT */
+        .meal-table { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; width: 100%; }
+        .meal-day { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px; border: 1px solid var(--border); }
+        .meal-day h4 { font-size: 0.8rem; color: var(--accent); text-align: center; margin-bottom: 8px; }
+        .meal-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.7rem; padding: 6px; margin-bottom: 4px; border: none; outline: none; }
+        .meal-label { font-size: 0.55rem; opacity: 0.4; display: block; margin-bottom: 2px; }
+
+        /* --- MOBİL OPTİMİZASYON (ALT ALTA DİZİLİM) --- */
+        @media (max-width: 768px) {
+            .grid-layout { grid-template-columns: 1fr; } /* Mobilde tek sütun */
+            .panel { grid-column: span 1 !important; height: auto; } /* Hepsi tam genişlik */
+            .water-grid { grid-template-columns: repeat(5, 1fr); } /* Bardaklar 5x2 olur */
+            .meal-table { grid-template-columns: 1fr; } /* Yemekler alt alta */
+            .top-bar { padding: 12px 20px; flex-direction: column; gap: 10px; text-align: center; }
+            .cal-day { font-size: 1rem; padding: 10px; }
+        }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div class="container" id="captureArea">
+<body oncontextmenu="return false;">
+
+<div class="container" id="captureArea">
     <header class="top-bar">
         <div class="welcome-text">Hoş geldin, <span id="userNameDisp">Şef</span></div>
         <div style="display: flex; gap: 10px;">
             <button class="btn-primary" onclick="toggleTheme()" id="themeIco"><i data-lucide="sun"></i></button>
             <button class="btn-primary" onclick="toggleModal('settingsModal')"><i data-lucide="settings"></i></button>
-            <button class="btn-primary" onclick="exportPDF()">PDF İndir</button>
+            <button class="btn-primary" onclick="exportPDF()"><i data-lucide="download"></i></button>
         </div>
     </header>
 
@@ -98,45 +102,48 @@
         <section class="panel" style="grid-column: span 1;">
             <h2><i data-lucide="quote"></i> Motivasyon</h2>
             <div style="flex:1; display:flex; align-items:center; justify-content:center;">
-                <p id="quoteBox" style="font-style:italic; text-align:center; font-size: 1.1rem; line-height: 1.4;"></p>
+                <p id="quoteBox" style="font-style:italic; text-align:center; font-size: 1.1rem; font-weight: 300;"></p>
             </div>
         </section>
 
         <section class="panel" style="grid-column: span 1;">
             <h2><i data-lucide="zap"></i> Deep Focus</h2>
             <div style="text-align: center; flex:1; display:flex; flex-direction:column; justify-content:center;">
-                <div id="timerDisp" style="font-size: 3rem; font-weight: 800; margin-bottom: 10px;">25:00</div>
-                <div style="display: flex; gap: 5px;">
+                <div id="timerDisp" style="font-size: 3.2rem; font-weight: 800; margin-bottom: 10px;">25:00</div>
+                <div style="display: flex; gap: 5px; flex-direction: column;">
                     <input type="number" id="timerMin" value="25" class="input-field" style="text-align:center">
-                    <button class="btn-primary" id="timerCtrl">Başlat</button>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn-primary" id="timerCtrl" style="flex:2">Başlat</button>
+                        <button class="btn-secondary" onclick="Focus.reset()" style="flex:1"><i data-lucide="rotate-ccw" style="width:16px"></i></button>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="panel" style="grid-column: span 2;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2><i data-lucide="droplet"></i> Su Takibi (10 Bardak)</h2>
-                <span id="waterText" style="font-size: 1.4rem; font-weight: 800; color: var(--accent);">0 / 2000 ml</span>
+                <h2><i data-lucide="droplet"></i> Su Takibi</h2>
+                <span id="waterText" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">0 / 2000 ml</span>
             </div>
             <div class="water-grid" id="waterGrid"></div>
         </section>
 
         <section class="panel" style="grid-column: span 2;">
             <div class="cal-nav">
-                <h2><i data-lucide="calendar"></i> Takvim Planlayıcı</h2>
-                <div>
-                    <button onclick="Cal.prev()" class="btn-primary" style="padding:5px 10px"> < </button>
-                    <span id="calMonthTitle" style="margin: 0 10px; font-weight:700; font-size:0.9rem">Mart 2026</span>
-                    <button onclick="Cal.next()" class="btn-primary" style="padding:5px 10px"> > </button>
+                <h2><i data-lucide="calendar"></i> Planlayıcı</h2>
+                <div style="display:flex; align-items:center; gap:8px">
+                    <button onclick="Cal.prev()" class="btn-secondary" style="padding:5px 10px"> < </button>
+                    <span id="calMonthTitle" style="font-weight:800; font-size:0.9rem">Mart 2026</span>
+                    <button onclick="Cal.next()" class="btn-secondary" style="padding:5px 10px"> > </button>
                 </div>
             </div>
             <div class="cal-grid" id="calGrid"></div>
         </section>
 
         <section class="panel">
-            <h2><i data-lucide="check-square"></i> Yapılacaklar</h2>
-            <div style="display:flex; gap:5px; margin-bottom:10px">
-                <input id="todoIn" class="input-field" placeholder="Görev...">
+            <h2><i data-lucide="check-square"></i> To-Do List</h2>
+            <div style="display:flex; gap:8px; margin-bottom:12px">
+                <input id="todoIn" class="input-field" placeholder="Bugün ne var?">
                 <button class="btn-primary" onclick="Lists.add('todo')">+</button>
             </div>
             <ul id="todoList" class="item-list"></ul>
@@ -144,61 +151,65 @@
 
         <section class="panel">
             <h2><i data-lucide="wallet"></i> Bütçe Takibi</h2>
-            <div style="display:flex; gap:5px; margin-bottom:10px">
-                <input id="budgetIn" class="input-field" placeholder="Harcama: 500">
+            <div style="display:flex; gap:8px; margin-bottom:12px">
+                <input id="budgetIn" class="input-field" placeholder="Gider: 500">
                 <button class="btn-primary" onclick="Lists.add('budget')">+</button>
             </div>
-            <div style="text-align:right; font-weight:800; color:var(--accent); font-size:1rem; margin-bottom:5px">Total: <span id="budgetTotal">0</span> TL</div>
+            <div style="text-align:right; font-weight:800; color:var(--accent); font-size:1.1rem; margin-bottom:8px">Toplam: <span id="budgetTotal">0</span> TL</div>
             <ul id="budgetList" class="item-list"></ul>
         </section>
 
-        <section class="panel" style="grid-column: span 4;" id="mealExport">
-            <h2><i data-lucide="utensils"></i> 5 Öğünlü Haftalık Yemek Planı</h2>
+        <section class="panel" style="grid-column: span 4;">
+            <h2><i data-lucide="utensils"></i> Haftalık Yemek Planı (5 Öğün)</h2>
             <div class="meal-table" id="mealGrid"></div>
         </section>
 
-        <section class="panel" style="grid-column: span 4;" id="habitExport">
-            <h2><i data-lucide="activity"></i> Haftalık Alışkanlık Takibi (10 Satır)</h2>
-            <table class="habit-table">
-                <thead id="habitHead"></thead>
-                <tbody id="habitGrid"></tbody>
-            </table>
+        <section class="panel" style="grid-column: span 4;">
+            <h2><i data-lucide="activity"></i> Alışkanlık Takibi (Haftalık)</h2>
+            <div style="overflow-x: auto;">
+                <table class="habit-table">
+                    <thead id="habitHead"></thead>
+                    <tbody id="habitGrid"></tbody>
+                </table>
+            </div>
         </section>
     </main>
 </div>
 
 <div id="settingsModal" class="modal hidden">
-    <div class="panel" style="width: 320px;">
-        <h2>Ayarlar</h2>
-        <input id="userNameIn" class="input-field" placeholder="İsminizi yazın...">
-        <button class="btn-primary" onclick="saveProfile()" style="width:100%; margin-top:10px">Kaydet</button>
-        <button class="btn-primary" onclick="toggleModal('settingsModal')" style="width:100%; margin-top:5px; background:transparent; border:1px solid var(--border); color:var(--text)">Kapat</button>
+    <div class="panel" style="width: 350px;">
+        <h2><i data-lucide="settings"></i> Ayarlar</h2>
+        <input id="userNameIn" class="input-field" placeholder="İsminiz nedir şef?">
+        <button class="btn-primary" onclick="saveProfile()" style="width:100%; margin-top:12px">Kaydet</button>
+        <button class="btn-secondary" onclick="toggleModal('settingsModal')" style="width:100%; margin-top:8px">Kapat</button>
     </div>
 </div>
 
 <div id="calModal" class="modal hidden">
-    <div class="panel" style="width: 400px; max-height:80vh">
-        <h2 id="calModalTitle">Tarih</h2>
-        <div style="display:flex; gap:5px; margin-bottom:15px; background:rgba(0,0,0,0.2); padding:10px; border-radius:15px; justify-content:center">
-            <button class="emoji-btn" onclick="Cal.selEmoji('heart')">❤️</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('briefcase')">💼</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('dumbbell')">💪</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('shopping-cart')">🛒</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('book')">📚</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('coffee')">☕</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('alert-circle')">⚠️</button>
+    <div class="panel" style="width: 420px; max-height:90vh">
+        <h2 id="calModalTitle">Tarih Seçilmedi</h2>
+        <label style="font-size: 0.6rem; opacity: 0.5; margin-bottom: 8px; display: block;">BİR EMOJİ SEÇİN</label>
+        <div class="emoji-selector" id="emojiSelector">
+            <button class="emoji-btn active" onclick="Cal.selEmoji('💖')">💖</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('🌸')">🌸</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('🧘‍♀️')">🧘‍♀️</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('🛍️')">🛍️</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('📖')">📖</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('☕')">☕</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('🎀')">🎀</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('✨')">✨</button>
         </div>
-        <div style="display:flex; gap:5px; margin-bottom:10px">
-            <input id="calNoteIn" class="input-field" placeholder="Not ekle...">
+        <div style="display:flex; gap:8px; margin-bottom:15px">
+            <input id="calNoteIn" class="input-field" placeholder="Ne planlıyoruz?">
             <button class="btn-primary" onclick="Cal.addNote()">Ekle</button>
         </div>
         <ul id="calNoteList" class="item-list"></ul>
-        <button class="btn-primary" onclick="toggleModal('calModal')" style="width:100%; margin-top:10px">Kapat</button>
+        <button class="btn-secondary" onclick="toggleModal('calModal')" style="width:100%; margin-top:10px">Kapat</button>
     </div>
 </div>
 
 <script>
-    /* --- 3. MOTOR VE MANTIK --- */
+    /* --- 2. MOTOR VE MANTIK --- */
     lucide.createIcons();
     
     const DB = {
@@ -206,16 +217,14 @@
         set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
     };
 
-    // TAKVİM SİSTEMİ
+    // TAKVİM SİSTEMİ (EMOJİ ODAKLI)
     const Cal = {
         date: new Date(),
         selectedDate: null,
-        emoji: 'heart',
-        events: DB.get('zen_cal_v3') || {},
+        selectedEmoji: '💖',
+        events: DB.get('zen_cal_v4') || {},
 
-        init() {
-            this.render();
-        },
+        init() { this.render(); },
         render() {
             const grid = document.getElementById('calGrid');
             grid.innerHTML = '';
@@ -231,7 +240,7 @@
                 
                 let icons = '<div class="day-indicators">';
                 if(this.events[dateKey]) {
-                    this.events[dateKey].slice(0,3).forEach(ev => icons += `<i data-lucide="${ev.icon}" style="width:10px;height:10px"></i>`);
+                    this.events[dateKey].slice(0,2).forEach(ev => icons += `<span>${ev.emoji}</span>`);
                 }
                 icons += '</div>';
 
@@ -239,7 +248,6 @@
                 div.onclick = () => this.open(dateKey);
                 grid.appendChild(div);
             }
-            lucide.createIcons();
         },
         next() { this.date.setMonth(this.date.getMonth()+1); this.render(); },
         prev() { this.date.setMonth(this.date.getMonth()-1); this.render(); },
@@ -249,13 +257,19 @@
             this.renderNotes();
             toggleModal('calModal');
         },
-        selEmoji(e) { this.emoji = e; },
+        selEmoji(e) { 
+            this.selectedEmoji = e;
+            document.querySelectorAll('.emoji-btn').forEach(b => {
+                b.classList.remove('active');
+                if(b.innerText === e) b.classList.add('active');
+            });
+        },
         addNote() {
             const val = document.getElementById('calNoteIn').value;
             if(!val) return;
             if(!this.events[this.selectedDate]) this.events[this.selectedDate] = [];
-            this.events[this.selectedDate].push({ icon: this.emoji, text: val, id: Date.now() });
-            DB.set('zen_cal_v3', this.events);
+            this.events[this.selectedDate].push({ emoji: this.selectedEmoji, text: val, id: Date.now() });
+            DB.set('zen_cal_v4', this.events);
             document.getElementById('calNoteIn').value = '';
             this.renderNotes();
             this.render();
@@ -264,15 +278,14 @@
             const list = document.getElementById('calNoteList');
             list.innerHTML = (this.events[this.selectedDate] || []).map(n => `
                 <li class="item">
-                    <span><i data-lucide="${n.icon}" style="width:14px; vertical-align:middle"></i> ${n.text}</span>
-                    <span style="color:red; cursor:pointer" onclick="Cal.delNote(${n.id})">✕</span>
+                    <span>${n.emoji} ${n.text}</span>
+                    <span style="color:#ef4444; cursor:pointer" onclick="Cal.delNote(${n.id})">✕</span>
                 </li>
             `).join('');
-            lucide.createIcons();
         },
         delNote(id) {
             this.events[this.selectedDate] = this.events[this.selectedDate].filter(n => n.id !== id);
-            DB.set('zen_cal_v3', this.events);
+            DB.set('zen_cal_v4', this.events);
             this.renderNotes();
             this.render();
         }
@@ -280,16 +293,16 @@
 
     // SU TAKİBİ
     const Water = {
-        active: DB.get('zen_water_v3') || [],
+        active: DB.get('zen_water_v4') || [],
         init() {
             if(localStorage.getItem('zen_water_date') !== new Date().toDateString()) {
-                this.active = []; DB.set('zen_water_v3', []);
+                this.active = []; DB.set('zen_water_v4', []);
             }
             this.render();
         },
         toggle(i) {
             this.active.includes(i) ? this.active = this.active.filter(x=>x!==i) : this.active.push(i);
-            DB.set('zen_water_v3', this.active);
+            DB.set('zen_water_v4', this.active);
             localStorage.setItem('zen_water_date', new Date().toDateString());
             this.render();
         },
@@ -308,28 +321,59 @@
         }
     };
 
-    // YEMEK VE HABIT (5 ÖĞÜN VE 10 SATIR)
+    // FOCUS MOD (SIFIRLAMALI)
+    const Focus = {
+        timer: null, timeLeft: 25*60,
+        init() {
+            document.getElementById('timerCtrl').onclick = () => this.toggle();
+        },
+        toggle() {
+            if(this.timer) { this.stop(); }
+            else { this.start(); }
+        },
+        start() {
+            this.timeLeft = document.getElementById('timerSet')?.value ? document.getElementById('timerMin').value * 60 : 25*60;
+            document.getElementById('timerCtrl').innerText = 'Durdur';
+            this.timer = setInterval(() => {
+                this.timeLeft--;
+                this.updateUI();
+                if(this.timeLeft <= 0) { this.stop(); alert('Focus bitti şef! ✨'); }
+            }, 1000);
+        },
+        stop() {
+            clearInterval(this.timer);
+            this.timer = null;
+            document.getElementById('timerCtrl').innerText = 'Başlat';
+        },
+        reset() {
+            this.stop();
+            this.timeLeft = document.getElementById('timerMin').value * 60;
+            this.updateUI();
+        },
+        updateUI() {
+            const m = Math.floor(this.timeLeft/60), s = this.timeLeft%60;
+            document.getElementById('timerDisp').innerText = `${m}:${s.toString().padStart(2,'0')}`;
+        }
+    };
+
+    // HAYAT TAKİBİ (YEMEK & HABIT)
     const Life = {
         days: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'],
-        meals: DB.get('zen_meals_v3') || {},
-        habits: DB.get('zen_habits_v3') || Array.from({length:10}, () => ({name:'', c:[]})),
-        
-        init() {
-            this.renderMeals();
-            this.renderHabits();
-        },
+        meals: DB.get('zen_meals_v4') || {},
+        habits: DB.get('zen_habits_v4') || Array.from({length:10}, () => ({name:'', c:[]})),
+        init() { this.renderMeals(); this.renderHabits(); },
         renderMeals() {
             const grid = document.getElementById('mealGrid');
             const slots = ['Sabah','Ara 1','Öğle','Ara 2','Akşam'];
             this.days.forEach(d => {
-                let html = `<div class="meal-day"><h4>${d}</h4>`;
+                let h = `<div class="meal-day"><h4>${d}</h4>`;
                 slots.forEach((s, i) => {
-                    html += `<span class="meal-label">${s}</span><input class="meal-input" value="${this.meals[d+i]||''}" onchange="Life.saveMeal('${d+i}', this.value)">`;
+                    h += `<span class="meal-label">${s}</span><input class="meal-input" value="${this.meals[d+i]||''}" onchange="Life.saveMeal('${d+i}', this.value)">`;
                 });
-                grid.innerHTML += html + `</div>`;
+                grid.innerHTML += h + `</div>`;
             });
         },
-        saveMeal(k, v) { this.meals[k] = v; DB.set('zen_meals_v3', this.meals); },
+        saveMeal(k, v) { this.meals[k] = v; DB.set('zen_meals_v4', this.meals); },
         renderHabits() {
             const head = document.getElementById('habitHead');
             const body = document.getElementById('habitGrid');
@@ -341,24 +385,24 @@
                 body.appendChild(tr);
             });
         },
-        saveHabit(r, v) { this.habits[r].name = v; DB.set('zen_habits_v3', this.habits); },
+        saveHabit(r, v) { this.habits[r].name = v; DB.set('zen_habits_v4', this.habits); },
         toggleHabit(r, c) {
             const h = this.habits[r];
             h.c.includes(c) ? h.c = h.c.filter(x=>x!==c) : h.c.push(c);
-            DB.set('zen_habits_v3', this.habits);
+            DB.set('zen_habits_v4', this.habits);
             location.reload();
         }
     };
 
-    // DİĞER FONKSİYONLAR
+    // LİSTELER
     const Lists = {
-        todo: DB.get('zen_todo_v3') || [],
-        budget: DB.get('zen_budget_v3') || [],
+        todo: DB.get('zen_todo_v4') || [],
+        budget: DB.get('zen_budget_v4') || [],
         add(type) {
             const val = document.getElementById(type+'In').value;
             if(!val) return;
             this[type].push(val);
-            DB.set('zen_'+type+'_v3', this[type]);
+            DB.set('zen_'+type+'_v4', this[type]);
             document.getElementById(type+'In').value = '';
             this.render(type);
         },
@@ -367,25 +411,14 @@
             let total = 0;
             list.innerHTML = this[type].map((t, i) => {
                 if(type==='budget') { const m = t.match(/\d+/); if(m) total += parseInt(m[0]); }
-                return `<li class="item"><span>${t}</span><span style="color:red; cursor:pointer" onclick="Lists.del('${type}',${i})">✕</span></li>`;
+                return `<li class="item"><span>${t}</span><span style="color:#ef4444; cursor:pointer" onclick="Lists.del('${type}',${i})">✕</span></li>`;
             }).join('');
             if(type==='budget') document.getElementById('budgetTotal').innerText = total;
         },
-        del(type, i) { this[type].splice(i,1); DB.set('zen_'+type+'_v3', this[type]); this.render(type); }
+        del(type, i) { this[type].splice(i,1); DB.set('zen_'+type+'_v4', this[type]); this.render(type); }
     };
 
-    let timer;
-    document.getElementById('timerCtrl').onclick = () => {
-        if(timer) { clearInterval(timer); timer=null; document.getElementById('timerCtrl').innerText='Başlat'; return; }
-        let sec = document.getElementById('timerMin').value * 60;
-        document.getElementById('timerCtrl').innerText='Durdur';
-        timer = setInterval(() => {
-            sec--;
-            document.getElementById('timerDisp').innerText = `${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`;
-            if(sec<=0) { clearInterval(timer); alert('Seans bitti!'); }
-        }, 1000);
-    };
-
+    // PDF VE TEMA
     async function exportPDF() {
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('l', 'mm', 'a3');
@@ -394,7 +427,6 @@
             pdf.save('ZenOS_Dashboard.pdf');
         });
     }
-
     function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
     function toggleTheme() {
         const b = document.body;
@@ -405,12 +437,12 @@
         location.reload();
     }
 
-    // BAŞLAT
+    // BAŞLANGIÇ
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('userNameDisp').innerText = localStorage.getItem('zen_name') || 'Şef';
-        const q = ["Odaklandığın şey büyür.", "Zihnin sakini, hayatın hâkimi olur.", "Başarı disiplinle gelir.", "Bugün yarınki seni yaratır."];
+        const q = ["Gülümse, bugün senin günün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Zihnin sakin, ruhun özgür olsun.", "Küçük adımlar, büyük hayaller."];
         document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
-        Cal.init(); Water.init(); Life.init(); Lists.render('todo'); Lists.render('budget');
+        Cal.init(); Water.init(); Life.init(); Focus.init(); Lists.render('todo'); Lists.render('budget');
     });
 </script>
 </body>
