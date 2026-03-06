@@ -59,13 +59,16 @@
         </div>
 
         <div class="panel">
-            <h2><i data-lucide="droplet"></i> Su Hatırlatıcı</h2>
-            <div style="text-align: center;">
-                <div id="waterCount" style="font-size: 1.5rem; font-weight: 700;">0 / 2500 ml</div>
-                <div class="water-progress"><div id="waterBar" class="water-bar"></div></div>
-                <button onclick="addWater()" style="width: 100%;">+250ml İçtim</button>
+    <h2><i data-lucide="droplet"></i> Su Takibi (Bardak: 200ml)</h2>
+    <div style="text-align: center;">
+        <div id="waterTotal" style="font-size: 1.8rem; font-weight: 800; color: var(--accent); margin-bottom: 15px;">0 / 2000 ml</div>
+        
+        <div class="glass-container" id="glassContainer">
             </div>
-        </div>
+        
+        <p style="font-size: 0.7rem; opacity: 0.5; margin-top: 10px;">Gece 00:00'da otomatik sıfırlanır.</p>
+    </div>
+</div>
 
         <div class="panel">
             <h2><i data-lucide="zap"></i> Deep Work</h2>
