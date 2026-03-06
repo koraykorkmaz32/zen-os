@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zen OS | Personal Terminal</title>
+    <title>Zen OS | My Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -14,97 +14,182 @@
             --text: #f8fafc;
             --border: rgba(255, 255, 255, 0.08);
         }
-
         [data-theme="zen"] {
-            --bg: #f8fafc;
-            --panel: rgba(255, 255, 255, 0.8);
-            --accent: #10b981;
-            --text: #1e293b;
-            --border: rgba(0, 0, 0, 0.05);
+            --bg: #f8fafc; --panel: rgba(255, 255, 255, 0.8);
+            --accent: #10b981; --text: #1e293b; --border: rgba(0, 0, 0, 0.05);
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            min-height: 100vh;
-        }
-
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 20px; margin-bottom: 20px; border-radius: 24px;
-            background: var(--panel); backdrop-filter: blur(10px); border: 1px solid var(--border);
-        }
-
-        .grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 20px; }
-        .panel { 
-            background: var(--panel); backdrop-filter: blur(15px); 
-            border-radius: 28px; padding: 25px; border: 1px solid var(--border);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-
-        h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .placeholder { border: 2px dashed var(--border); border-radius: 15px; height: 150px; display: flex; align-items: center; justify-content: center; opacity: 0.5; font-size: 0.8rem; }
-
-        button { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .theme-btn { background: var(--panel); border: 1px solid var(--border); color: var(--text); }
-
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.5s; min-height: 100vh; padding: 20px; }
+        
+        /* GRID YAPISI: 3 KOLONLU MODERN DÜZEN */
+        .container { max-width: 1400px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .panel { background: var(--panel); backdrop-filter: blur(15px); border-radius: 24px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        
+        /* BAŞLIKLAR VE MODÜLLER */
+        h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        input, button { border-radius: 10px; border: none; padding: 10px; font-family: inherit; }
+        input { background: rgba(0,0,0,0.2); color: #fff; width: 100%; border: 1px solid var(--border); }
+        button { background: var(--accent); color: #000; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .item-list { list-style: none; margin-top: 10px; max-height: 150px; overflow-y: auto; }
+        .item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 8px; margin-bottom: 5px; font-size: 0.85rem; }
+        
+        /* ÖZEL MODÜL TASARIMLARI */
+        .quote-box { font-style: italic; font-weight: 300; text-align: center; font-size: 1.1rem; border-left: 3px solid var(--accent); padding-left: 15px; }
+        .water-progress { height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .water-bar { height: 100%; background: #38bdf8; width: 0%; transition: 0.5s; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; font-size: 0.7rem; }
+        .cal-day { padding: 5px; background: rgba(255,255,255,0.05); border-radius: 5px; }
+        
         @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <header>
-        <h1 style="font-size: 1.2rem; font-weight: 800;">ZEN OS <span style="font-weight: 300; opacity: 0.5;">v1.0</span></h1>
-        <div style="display: flex; gap: 10px;">
-            <button class="theme-btn" onclick="toggleTheme()"><i data-lucide="sun"></i></button>
-            <button onclick="alert('Altyapı hazır, modüller yüklenecek!')">Giriş Sistemi</button>
-        </div>
+    <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; background: var(--panel); padding: 15px 25px; border-radius: 20px; border: 1px solid var(--border);">
+        <h1 style="font-size: 1.2rem; font-weight: 800;">ZEN OS <span style="font-weight: 300; opacity: 0.5;">PRO</span></h1>
+        <button onclick="document.body.getAttribute('data-theme') === 'zen' ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'zen')">Tema Değiştir</button>
     </header>
 
     <div class="grid">
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div class="panel">
-                <h2><i data-lucide="cloud"></i> Hava Durumu</h2>
-                <div class="placeholder">Yükleniyor...</div>
-            </div>
-            <div class="panel">
-                <h2><i data-lucide="zap"></i> Focus Mode</h2>
-                <div style="text-align: center;">
-                    <div style="font-size: 3rem; font-weight: 800; margin-bottom: 10px;">25:00</div>
-                    <button style="width: 100%;">Başlat</button>
-                </div>
-            </div>
+        <div class="panel" style="grid-column: span 2;">
+            <h2><i data-lucide="quote"></i> Günlük Motivasyon</h2>
+            <div id="quoteDisplay" class="quote-box">"Zihnin sakini, hayatın hâkimi olur."</div>
         </div>
+
         <div class="panel">
-            <h2><i data-lucide="calendar"></i> Takvim & Notlar</h2>
-            <div class="placeholder" style="height: 400px;">Takvim Izgarası Hazırlanıyor...</div>
+            <h2><i data-lucide="droplet"></i> Su Hatırlatıcı</h2>
+            <div style="text-align: center;">
+                <div id="waterCount" style="font-size: 1.5rem; font-weight: 700;">0 / 2500 ml</div>
+                <div class="water-progress"><div id="waterBar" class="water-bar"></div></div>
+                <button onclick="addWater()" style="width: 100%;">+250ml İçtim</button>
+            </div>
         </div>
-        <div style="display: flex; flex-direction: column; gap: 20px;">
-            <div class="panel">
-                <h2><i data-lucide="trending-up"></i> Borsa</h2>
-                <div class="placeholder">Piyasa Verileri (Yakında)</div>
+
+        <div class="panel">
+            <h2><i data-lucide="zap"></i> Deep Work</h2>
+            <div style="text-align: center;">
+                <div id="timer" style="font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;">25:00</div>
+                <button id="timerBtn" onclick="toggleTimer()" style="width: 100%;">Başlat</button>
             </div>
-            <div class="panel">
-                <h2><i data-lucide="wallet"></i> Finans</h2>
-                <div class="placeholder">Harcama Takibi (Yakında)</div>
+        </div>
+
+        <div class="panel">
+            <h2><i data-lucide="calendar"></i> Takvim</h2>
+            <div id="calMonth" style="text-align: center; margin-bottom: 10px; font-weight: 700;"></div>
+            <div class="calendar-grid" id="calGrid"></div>
+        </div>
+
+        <div class="panel">
+            <h2><i data-lucide="check-square"></i> To-Do List</h2>
+            <div style="display: flex; gap: 5px;">
+                <input id="todoIn" placeholder="Görev ekle...">
+                <button onclick="addTodo()">+</button>
             </div>
+            <ul id="todoList" class="item-list"></ul>
+        </div>
+
+        <div class="panel">
+            <h2><i data-lucide="utensils"></i> Meal Planner</h2>
+            <select id="mealDay" style="width: 100%; margin-bottom: 5px; background: rgba(0,0,0,0.2); color: #fff; padding: 5px; border-radius: 5px; border: 1px solid var(--border);">
+                <option>Pazartesi</option><option>Salı</option><option>Çarşamba</option><option>Perşembe</option><option>Cuma</option><option>Cumartesi</option><option>Pazar</option>
+            </select>
+            <div style="display: flex; gap: 5px;">
+                <input id="mealIn" placeholder="Yemek adı...">
+                <button onclick="addMeal()">+</button>
+            </div>
+            <ul id="mealList" class="item-list"></ul>
+        </div>
+
+        <div class="panel">
+            <h2><i data-lucide="activity"></i> Habit Tracker</h2>
+            <div style="display: flex; gap: 5px;">
+                <input id="habitIn" placeholder="Alışkanlık...">
+                <button onclick="addHabit()">+</button>
+            </div>
+            <ul id="habitList" class="item-list"></ul>
+        </div>
+
+        <div class="panel">
+            <h2><i data-lucide="wallet"></i> Budget Tracker</h2>
+            <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                <input id="budgetIn" placeholder="Gider: Miktar">
+                <button onclick="addBudget()">+</button>
+            </div>
+            <div id="budgetTotal" style="text-align: right; font-weight: 800; color: var(--accent);">Toplam: 0 TL</div>
+            <ul id="budgetList" class="item-list"></ul>
         </div>
     </div>
 </div>
 
 <script>
     lucide.createIcons();
-    function toggleTheme() {
-        const b = document.body;
-        if (b.getAttribute('data-theme') === 'zen') {
-            b.removeAttribute('data-theme');
-        } else {
-            b.setAttribute('data-theme', 'zen');
+
+    // 1. MOTİVASYON SÖZLERİ
+    const quotes = [
+        "Başarı, her gün tekrarlanan küçük disiplinlerin toplamıdır.",
+        "Odaklandığın şey büyür. Gücünü dağıtma.",
+        "Bugün yapacakların, yarınki seni inşa eder.",
+        "En büyük rakibin, dün olduğun kişidir."
+    ];
+    document.getElementById("quoteDisplay").innerText = `"${quotes[Math.floor(Math.random()*quotes.length)]}"`;
+
+    // 2. SU TAKİBİ
+    let water = 0;
+    function addWater() {
+        water += 250;
+        document.getElementById("waterCount").innerText = `${water} / 2500 ml`;
+        document.getElementById("waterBar").style.width = Math.min((water/2500)*100, 100) + "%";
+    }
+
+    // 3. DEEP WORK (TIMER)
+    let time = 25 * 60, timer;
+    function toggleTimer() {
+        if(timer) { clearInterval(timer); timer = null; document.getElementById("timerBtn").innerText = "Devam Et"; }
+        else {
+            document.getElementById("timerBtn").innerText = "Durdur";
+            timer = setInterval(() => {
+                time--;
+                document.getElementById("timer").innerText = `${Math.floor(time/60)}:${(time%60).toString().padStart(2,'0')}`;
+                if(time <= 0) clearInterval(timer);
+            }, 1000);
+        }
+    }
+
+    // 4. TAKVİM (BASİT)
+    const d = new Date();
+    document.getElementById("calMonth").innerText = d.toLocaleString('tr-TR', { month: 'long', year: 'numeric' });
+    let calH = "";
+    for(let i=1; i<=30; i++) calH += `<div class="cal-day ${i === d.getDate() ? 'active' : ''}">${i}</div>`;
+    document.getElementById("calGrid").innerHTML = calH;
+
+    // LİSTE YÖNETİMİ (GENEL)
+    function addItem(inputId, listId, suffix = "") {
+        const input = document.getElementById(inputId);
+        if(!input.value) return;
+        const li = document.createElement("li");
+        li.className = "item";
+        li.innerHTML = `<span>${input.value}${suffix}</span><span onclick="this.parentElement.remove()" style="color:red; cursor:pointer">✕</span>`;
+        document.getElementById(listId).appendChild(li);
+        input.value = "";
+    }
+
+    function addTodo() { addItem("todoIn", "todoList"); }
+    function addHabit() { addItem("habitIn", "habitList"); }
+    function addMeal() { 
+        const day = document.getElementById("mealDay").value;
+        addItem("mealIn", "mealList", ` (${day})`); 
+    }
+    
+    let totalBudget = 0;
+    function addBudget() {
+        const val = document.getElementById("budgetIn").value;
+        const amount = parseInt(val.match(/\d+/));
+        if(amount) {
+            totalBudget += amount;
+            document.getElementById("budgetTotal").innerText = `Toplam: ${totalBudget} TL`;
+            addItem("budgetIn", "budgetList");
         }
     }
 </script>
