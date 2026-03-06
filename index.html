@@ -93,5 +93,35 @@
 </div>
 
 <script type="module" src="app.js"></script>
+    <div id="calendarModal" class="modal-overlay hidden">
+    <div class="modal-content panel">
+        <div class="modal-header">
+            <h3 id="modalDateTitle">Tarih</h3>
+            <button id="closeModalBtn" class="btn-outline" style="padding: 5px 10px; border: none; color: red;">✕</button>
+        </div>
+        <div class="modal-body">
+            <div class="icon-selector" id="iconSelector">
+                <button class="icon-btn active" data-icon="briefcase" title="İş/Toplantı"><i data-lucide="briefcase"></i></button>
+                <button class="icon-btn" data-icon="heart" title="Özel/Aile"><i data-lucide="heart"></i></button>
+                <button class="icon-btn" data-icon="shopping-cart" title="Alışveriş"><i data-lucide="shopping-cart"></i></button>
+                <button class="icon-btn" data-icon="dumbbell" title="Spor/Aktivite"><i data-lucide="dumbbell"></i></button>
+                <button class="icon-btn" data-icon="book" title="Eğitim/Okuma"><i data-lucide="book"></i></button>
+                <button class="icon-btn" data-icon="alert-circle" title="Önemli"><i data-lucide="alert-circle"></i></button>
+                <button class="icon-btn" data-icon="coffee" title="Mola/Buluşma"><i data-lucide="coffee"></i></button>
+            </div>
+            
+            <div class="input-group mb-2">
+                <input type="text" id="calNoteInput" placeholder="Bugün için planın ne şef?">
+                <button id="saveCalNoteBtn" class="btn-primary">Ekle</button>
+            </div>
+            
+            <ul id="dayNotesList" class="item-list"></ul>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
 </body>
 </html>
