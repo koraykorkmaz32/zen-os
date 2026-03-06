@@ -4,121 +4,318 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zen OS | Pro Terminal</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="data:application/manifest+json,{'name':'ZenOS','short_name':'ZenOS','start_url':'.','display':'standalone','background_color':'#020617','theme_color':'#38bdf8'}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <style>
+        /* --- 1. TASARIM (CSS) --- */
+        :root {
+            --bg: #020617; --panel: rgba(15, 23, 42, 0.75);
+            --accent: #38bdf8; --text: #f8fafc; --border: rgba(255, 255, 255, 0.08);
+        }
+        [data-theme="zen"] {
+            --bg: #f8fafc; --panel: rgba(255, 255, 255, 0.9);
+            --accent: #10b981; --text: #1e293b; --border: rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; min-height: 100vh; padding: 20px; overflow-x: hidden; }
+        
+        /* Layout */
+        .container { max-width: 1600px; margin: 0 auto; }
+        .grid-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .panel { background: var(--panel); backdrop-filter: blur(12px); border-radius: 24px; padding: 20px; border: 1px solid var(--border); position: relative; }
+        h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+
+        /* Üst Bar */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding: 15px 30px; background: var(--panel); border-radius: 20px; border: 1px solid var(--border); }
+        .welcome-text { font-size: 1.1rem; font-weight: 600; color: var(--text); }
+
+        /* Su Takibi */
+        .water-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 6px; margin-top: 10px; }
+        .glass { aspect-ratio: 1/1.5; border: 2px solid var(--accent); border-radius: 4px 4px 12px 12px; cursor: pointer; transition: 0.3s; }
+        .glass.active { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+
+        /* Yemek Planı (Görsel ve Geniş) */
+        .meal-table { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; width: 100%; }
+        .meal-day { background: rgba(255,255,255,0.03); border-radius: 15px; padding: 15px; text-align: center; border: 1px solid var(--border); }
+        .meal-day h4 { font-size: 0.8rem; margin-bottom: 10px; color: var(--accent); }
+        .meal-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.8rem; text-align: center; margin-top: 5px; }
+
+        /* Habit Tracker (Haftalık) */
+        .habit-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .habit-table th { font-size: 0.7rem; color: var(--accent); padding: 10px; }
+        .habit-table td { padding: 8px; border-bottom: 1px solid var(--border); }
+        .check-box { width: 20px; height: 20px; border: 2px solid var(--accent); border-radius: 5px; cursor: pointer; display: inline-block; transition: 0.3s; }
+        .check-box.checked { background: var(--accent); }
+
+        /* Global UI */
+        .btn-icon { background: transparent; border: none; color: var(--text); cursor: pointer; opacity: 0.7; }
+        .btn-icon:hover { opacity: 1; color: var(--accent); }
+        .btn-primary { background: var(--accent); color: #000; border: none; padding: 10px 15px; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 0.8rem; }
+        .input-field { background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 10px; width: 100%; margin-bottom: 10px; }
+        
+        /* Modal */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 999; }
+        .hidden { display: none !important; }
+
+        /* Takvim */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .cal-day { padding: 8px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; background: rgba(255,255,255,0.02); }
+        .cal-day.today { border: 2px solid var(--accent); color: var(--accent); }
+
+        @media (max-width: 1100px) { .grid-layout { grid-template-columns: repeat(2, 1fr); } .meal-table { grid-template-columns: repeat(1, 1fr); } }
+    </style>
 </head>
 <body>
 
 <div class="container">
     <header class="top-bar">
-        <h1>ZEN OS <span class="badge">PRO</span></h1>
-        <button id="themeToggle" class="btn-outline"><i data-lucide="moon"></i> Tema Değiştir</button>
+        <div class="welcome-text">Hoş geldin, <span id="userName">Şef</span></div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button class="btn-icon" id="settingsBtn"><i data-lucide="settings"></i></button>
+            <button class="btn-icon" id="themeBtn"><i data-lucide="sun"></i></button>
+            <button class="btn-primary" onclick="exportToPDF()">PDF İndir</button>
+        </div>
     </header>
 
     <main class="grid-layout">
-        <section class="panel mod-quote" style="grid-column: span 2;">
-            <h2><i data-lucide="quote"></i> Günün Sözü</h2>
-            <div style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                <p id="quoteText" class="quote-text">Yükleniyor...</p>
+        <section class="panel" style="grid-column: span 2;">
+            <h2><i data-lucide="quote"></i> Motivasyon</h2>
+            <p id="quoteDisplay" style="font-size: 1.2rem; font-style: italic; text-align: center;"></p>
+        </section>
+
+        <section class="panel" style="grid-column: span 2;">
+            <h2><i data-lucide="droplet"></i> Su Takibi (2000ml)</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span id="waterCount" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">0 / 2000 ml</span>
+                <div class="water-grid" id="waterGrid"></div>
             </div>
         </section>
 
-        <section class="panel mod-water" style="grid-column: span 2;">
-            <h2><i data-lucide="droplet"></i> Su Takibi</h2>
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-                <div class="water-status">
-                    <span id="waterTotalText">0</span><small style="font-size: 1rem; opacity: 0.7;"> / 2000 ml</small>
-                </div>
-                <div id="waterGrid" class="water-grid" style="width: 100%; max-width: 450px;"></div>
-                <div class="info-text">Gece 00:00'da sıfırlanır.</div>
-            </div>
-        </section>
-
-        <section class="panel mod-focus">
+        <section class="panel">
             <h2><i data-lucide="zap"></i> Deep Work</h2>
-            <div class="timer-display" id="timerDisplay">25:00</div>
-            <button id="timerBtn" class="btn-primary w-100">Başlat</button>
+            <div style="text-align: center;">
+                <div id="timerDisplay" style="font-size: 2.5rem; font-weight: 800; margin-bottom: 10px;">25:00</div>
+                <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                    <input type="number" id="timerSet" value="25" class="input-field" style="margin:0; text-align: center;">
+                    <button class="btn-primary" id="timerStartBtn">Başlat</button>
+                </div>
+            </div>
         </section>
 
-        <section class="panel mod-calendar">
+        <section class="panel">
             <h2><i data-lucide="calendar"></i> Takvim</h2>
-            <h3 id="calMonth" class="cal-month"></h3>
-            <div id="calGrid" class="calendar-grid"></div>
+            <div class="calendar-grid" id="calGrid"></div>
         </section>
 
-        <section class="panel mod-todo">
+        <section class="panel">
             <h2><i data-lucide="check-square"></i> Yapılacaklar</h2>
-            <div class="input-group">
-                <input type="text" id="todoInput" placeholder="Yeni görev...">
-                <button id="todoAddBtn" class="btn-primary">+</button>
-            </div>
-            <ul id="todoList" class="item-list"></ul>
+            <input id="todoIn" class="input-field" placeholder="Ekle...">
+            <ul id="todoList" style="list-style: none; font-size: 0.85rem;"></ul>
         </section>
 
-        <section class="panel mod-meal">
-            <h2><i data-lucide="utensils"></i> Yemek Planı</h2>
-            <select id="mealDaySelect" class="input-field mb-2">
-                <option value="Pzt">Pazartesi</option><option value="Sal">Salı</option>
-                <option value="Çar">Çarşamba</option><option value="Per">Perşembe</option>
-                <option value="Cum">Cuma</option><option value="Cts">Cumartesi</option>
-                <option value="Paz">Pazar</option>
-            </select>
-            <div class="input-group">
-                <input type="text" id="mealInput" placeholder="Yemek adı...">
-                <button id="mealAddBtn" class="btn-primary">+</button>
-            </div>
-            <ul id="mealList" class="item-list"></ul>
-        </section>
-
-        <section class="panel mod-habit">
-            <h2><i data-lucide="activity"></i> Alışkanlıklar</h2>
-            <div class="input-group">
-                <input type="text" id="habitInput" placeholder="Kitap oku...">
-                <button id="habitAddBtn" class="btn-primary">+</button>
-            </div>
-            <ul id="habitList" class="item-list"></ul>
-        </section>
-
-        <section class="panel mod-budget">
+        <section class="panel">
             <h2><i data-lucide="wallet"></i> Bütçe Takibi</h2>
-            <div class="input-group mb-2">
-                <input type="text" id="budgetInput" placeholder="Kira: 15000">
-                <button id="budgetAddBtn" class="btn-primary">+</button>
-            </div>
-            <div class="budget-total">Toplam Gider: <span id="budgetTotalText">0</span> TL</div>
-            <ul id="budgetList" class="item-list"></ul>
+            <input id="budgetIn" class="input-field" placeholder="Gider: Miktar">
+            <div style="text-align: right; font-weight: 700; color: var(--accent); margin-bottom: 5px;">Toplam: <span id="budgetTotal">0</span> TL</div>
+            <ul id="budgetList" style="list-style: none; font-size: 0.8rem;"></ul>
+        </section>
+
+        <section class="panel" style="grid-column: span 4;" id="mealExportArea">
+            <h2><i data-lucide="utensils"></i> Haftalık Yemek Planı</h2>
+            <div class="meal-table" id="mealGrid">
+                </div>
+        </section>
+
+        <section class="panel" style="grid-column: span 4;" id="habitExportArea">
+            <h2><i data-lucide="activity"></i> Haftalık Alışkanlık Takibi (10 Satır)</h2>
+            <table class="habit-table">
+                <thead>
+                    <tr><th>Alışkanlık</th><th>Pzt</th><th>Sal</th><th>Çar</th><th>Per</th><th>Cum</th><th>Cts</th><th>Paz</th></tr>
+                </thead>
+                <tbody id="habitGrid"></tbody>
+            </table>
         </section>
     </main>
 </div>
 
-<div id="calendarModal" class="modal-overlay hidden">
-    <div class="modal-content panel">
-        <div class="modal-header">
-            <h3 id="modalDateTitle">Tarih</h3>
-            <button id="closeModalBtn" class="btn-outline" style="padding: 5px 10px; border: none; color: #ef4444; font-weight: bold;">✕</button>
-        </div>
-        <div class="modal-body">
-            <div class="icon-selector" id="iconSelector">
-                <button class="icon-btn active" data-icon="briefcase" title="İş/Toplantı"><i data-lucide="briefcase"></i></button>
-                <button class="icon-btn" data-icon="heart" title="Özel/Aile"><i data-lucide="heart"></i></button>
-                <button class="icon-btn" data-icon="shopping-cart" title="Alışveriş"><i data-lucide="shopping-cart"></i></button>
-                <button class="icon-btn" data-icon="dumbbell" title="Spor/Aktivite"><i data-lucide="dumbbell"></i></button>
-                <button class="icon-btn" data-icon="book" title="Eğitim/Okuma"><i data-lucide="book"></i></button>
-                <button class="icon-btn" data-icon="alert-circle" title="Önemli"><i data-lucide="alert-circle"></i></button>
-                <button class="icon-btn" data-icon="coffee" title="Mola/Buluşma"><i data-lucide="coffee"></i></button>
-            </div>
-            
-            <div class="input-group mb-2">
-                <input type="text" id="calNoteInput" placeholder="Planın ne şef?">
-                <button id="saveCalNoteBtn" class="btn-primary">Ekle</button>
-            </div>
-            
-            <ul id="dayNotesList" class="item-list" style="max-height: 150px; overflow-y: auto;"></ul>
-        </div>
+<div id="settingsModal" class="modal hidden">
+    <div class="panel" style="width: 300px;">
+        <h2><i data-lucide="user"></i> Profil Ayarları</h2>
+        <input id="nameInput" class="input-field" placeholder="İsminiz...">
+        <button class="btn-primary w-100" id="saveNameBtn" style="width:100%">Kaydet</button>
+        <button class="btn-icon" onclick="toggleModal('settingsModal')" style="margin-top:10px">Kapat</button>
     </div>
 </div>
 
-<script type="module" src="app.js"></script>
+<script>
+    /* --- 2. MANTIK (JAVASCRIPT) --- */
+    lucide.createIcons();
+
+    const Storage = {
+        get: (k) => JSON.parse(localStorage.getItem(k)),
+        set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
+    };
+
+    // --- PROFİL ---
+    const Profile = {
+        init() {
+            const name = localStorage.getItem('zen_name') || 'Şef';
+            document.getElementById('userName').innerText = name;
+            document.getElementById('saveNameBtn').onclick = () => {
+                const newName = document.getElementById('nameInput').value;
+                if(newName) {
+                    localStorage.setItem('zen_name', newName);
+                    document.getElementById('userName').innerText = newName;
+                    toggleModal('settingsModal');
+                }
+            };
+            document.getElementById('settingsBtn').onclick = () => toggleModal('settingsModal');
+        }
+    };
+
+    // --- SU TAKİBİ ---
+    const Water = {
+        data: Storage.get('zen_water') || [],
+        init() {
+            this.checkReset();
+            this.render();
+        },
+        checkReset() {
+            const lastDate = localStorage.getItem('zen_water_date');
+            if(lastDate !== new Date().toDateString()) {
+                this.data = [];
+                Storage.set('zen_water', []);
+            }
+        },
+        toggle(i) {
+            this.data.includes(i) ? this.data = this.data.filter(x=>x!==i) : this.data.push(i);
+            Storage.set('zen_water', this.data);
+            localStorage.setItem('zen_water_date', new Date().toDateString());
+            this.render();
+        },
+        render() {
+            const grid = document.getElementById('waterGrid');
+            grid.innerHTML = '';
+            for(let i=0; i<10; i++){
+                const g = document.createElement('div');
+                g.className = `glass ${this.data.includes(i)?'active':''}`;
+                g.onclick = () => this.toggle(i);
+                grid.appendChild(g);
+            }
+            document.getElementById('waterCount').innerText = `${this.data.length * 200} / 2000 ml`;
+        }
+    };
+
+    // --- DEEP WORK ---
+    const Focus = {
+        timer: null,
+        timeLeft: 25 * 60,
+        init() {
+            document.getElementById('timerStartBtn').onclick = () => this.toggle();
+        },
+        toggle() {
+            if(this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+                document.getElementById('timerStartBtn').innerText = 'Başlat';
+            } else {
+                this.timeLeft = document.getElementById('timerSet').value * 60;
+                document.getElementById('timerStartBtn').innerText = 'Durdur';
+                this.timer = setInterval(() => {
+                    this.timeLeft--;
+                    const m = Math.floor(this.timeLeft / 60);
+                    const s = this.timeLeft % 60;
+                    document.getElementById('timerDisplay').innerText = `${m}:${s.toString().padStart(2,'0')}`;
+                    if(this.timeLeft <= 0) { clearInterval(this.timer); alert('Süre bitti şef!'); }
+                }, 1000);
+            }
+        }
+    };
+
+    // --- YEMEK PLANI ---
+    const Meals = {
+        days: ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'],
+        data: Storage.get('zen_meals') || {},
+        init() {
+            const grid = document.getElementById('mealGrid');
+            this.days.forEach(d => {
+                const div = document.createElement('div');
+                div.className = 'meal-day';
+                div.innerHTML = `<h4>${d}</h4>
+                    <input class="meal-input" placeholder="Sabah" value="${this.data[d+'_1']||''}" onchange="Meals.save('${d}_1', this.value)">
+                    <input class="meal-input" placeholder="Öğle" value="${this.data[d+'_2']||''}" onchange="Meals.save('${d}_2', this.value)">
+                    <input class="meal-input" placeholder="Akşam" value="${this.data[d+'_3']||''}" onchange="Meals.save('${d}_3', this.value)">`;
+                grid.appendChild(div);
+            });
+        },
+        save(k, v) { this.data[k] = v; Storage.set('zen_meals', this.data); }
+    };
+
+    // --- HABIT TRACKER ---
+    const Habits = {
+        data: Storage.get('zen_habits') || Array(10).fill({name:'', checks:[]}),
+        init() {
+            const tbody = document.getElementById('habitGrid');
+            this.data.forEach((h, r) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td><input class="meal-input" style="text-align:left" placeholder="Alışkanlık..." value="${h.name}" onchange="Habits.saveName(${r}, this.value)"></td>`;
+                for(let c=0; c<7; c++){
+                    tr.innerHTML += `<td><div class="check-box ${h.checks.includes(c)?'checked':''}" onclick="Habits.toggle(${r}, ${c})"></div></td>`;
+                }
+                tbody.appendChild(tr);
+            });
+        },
+        saveName(r, v) { this.data[r].name = v; Storage.set('zen_habits', this.data); },
+        toggle(r, c) {
+            const h = this.data[r];
+            h.checks.includes(c) ? h.checks = h.checks.filter(x=>x!==c) : h.checks.push(c);
+            Storage.set('zen_habits', this.data);
+            location.reload(); // Re-render basitleştirmesi
+        }
+    };
+
+    // --- PDF EXPORT ---
+    async function exportToPDF() {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('l', 'mm', 'a4');
+        const element = document.querySelector('.container');
+        
+        // Bu işlem için html2canvas kullanıyoruz
+        html2canvas(element, { scale: 2, backgroundColor: '#020617' }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgProps = pdf.getImageProperties(imgData);
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('ZenOS_Rapor.pdf');
+        });
+    }
+
+    // --- HELPER ---
+    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+
+    // Start All
+    Profile.init(); Water.init(); Focus.init(); Meals.init(); Habits.init();
+    document.getElementById('themeBtn').onclick = () => {
+        document.body.getAttribute('data-theme') === 'zen' ? document.body.removeAttribute('data-theme') : document.body.setAttribute('data-theme', 'zen');
+    };
+    
+    // Motivasyon Sözleri (Gelişmiş)
+    const quotes = ["Odaklandığın şey büyür.", "Bugün yapacakların, yarınki seni inşa eder.", "Zihnin sakini, hayatın hâkimi olur.", "Başarı, küçük disiplinlerin toplamıdır."];
+    document.getElementById('quoteDisplay').innerText = `"${quotes[Math.floor(Math.random()*quotes.length)]}"`;
+
+    // Basit Takvim
+    const calGrid = document.getElementById('calGrid');
+    const today = new Date().getDate();
+    for(let i=1; i<=31; i++) {
+        calGrid.innerHTML += `<div class="cal-day ${i===today?'today':''}">${i}</div>`;
+    }
+</script>
+
 </body>
 </html>
