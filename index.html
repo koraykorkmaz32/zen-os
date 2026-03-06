@@ -356,24 +356,28 @@
         }
     };
 
-    // HAYAT TAKİBİ (YEMEK & HABIT)
+    // YEMEK VE HABIT (5 ÖĞÜN VE 10 SATIR)
     const Life = {
         days: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'],
-        meals: DB.get('zen_meals_v4') || {},
-        habits: DB.get('zen_habits_v4') || Array.from({length:10}, () => ({name:'', c:[]})),
-        init() { this.renderMeals(); this.renderHabits(); },
+        meals: DB.get('zen_meals_v3') || {},
+        habits: DB.get('zen_habits_v3') || Array.from({length:10}, () => ({name:'', c:[]})),
+        
+        init() {
+            this.renderMeals();
+            this.renderHabits();
+        },
         renderMeals() {
             const grid = document.getElementById('mealGrid');
             const slots = ['Sabah','Ara 1','Öğle','Ara 2','Akşam'];
             this.days.forEach(d => {
-                let h = `<div class="meal-day"><h4>${d}</h4>`;
+                let html = `<div class="meal-day"><h4>${d}</h4>`;
                 slots.forEach((s, i) => {
-                    h += `<span class="meal-label">${s}</span><input class="meal-input" value="${this.meals[d+i]||''}" onchange="Life.saveMeal('${d+i}', this.value)">`;
+                    html += `<span class="meal-label">${s}</span><input class="meal-input" value="${this.meals[d+i]||''}" onchange="Life.saveMeal('${d+i}', this.value)">`;
                 });
-                grid.innerHTML += h + `</div>`;
+                grid.innerHTML += html + `</div>`;
             });
         },
-        saveMeal(k, v) { this.meals[k] = v; DB.set('zen_meals_v4', this.meals); },
+        saveMeal(k, v) { this.meals[k] = v; DB.set('zen_meals_v3', this.meals); },
         renderHabits() {
             const head = document.getElementById('habitHead');
             const body = document.getElementById('habitGrid');
@@ -385,11 +389,11 @@
                 body.appendChild(tr);
             });
         },
-        saveHabit(r, v) { this.habits[r].name = v; DB.set('zen_habits_v4', this.habits); },
+        saveHabit(r, v) { this.habits[r].name = v; DB.set('zen_habits_v3', this.habits); },
         toggleHabit(r, c) {
             const h = this.habits[r];
             h.c.includes(c) ? h.c = h.c.filter(x=>x!==c) : h.c.push(c);
-            DB.set('zen_habits_v4', this.habits);
+            DB.set('zen_habits_v3', this.habits);
             location.reload();
         }
     };
