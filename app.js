@@ -132,19 +132,148 @@ const FocusModule = {
     }
 };
 
-// --- 5. TAKVİM ---
+// --- 5. GELİŞMİŞ TAKVİM (FIREBASE'E HAZIR YAPI) ---
 const CalendarModule = {
+    currentDate: new Date(),
+    selectedDateStr: null,
+    selectedIcon: 'briefcase', // Varsayılan ikon
+    
+    // Veri Mimarisi: { "2026-03-06": [ {id: 1, icon: 'heart', text: 'Kızımın gösterisi'} ] }
+    events: JSON.parse(localStorage.getItem('zen_calendar_events')) || {},
+
     init() {
-        const d = new Date();
-        document.getElementById('calMonth').innerText = d.toLocaleString('tr-TR', { month: 'long', year: 'numeric' });
+        this.renderGrid();
+        this.bindModalEvents();
+    },
+
+    // İLERİDE FIREBASE BAĞLANDIĞINDA SADECE BU FONKSİYONU DEĞİŞTİRECEĞİZ
+    save() {
+        // Örn: db.collection('users').doc(uid).collection('calendar').set(this.events);
+        localStorage.setItem('zen_calendar_events', JSON.stringify(this.events));
+    },
+
+    renderGrid() {
+        const year = this.currentDate.getFullYear();
+        const month = this.currentDate.getMonth();
         
+        const monthEl = document.getElementById('calMonth');
+        if (monthEl) monthEl.innerText = this.currentDate.toLocaleString('tr-TR', { month: 'long', year: 'numeric' });
+        
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
         let html = '';
-        const daysInMonth = new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate();
+        
         for (let i = 1; i <= daysInMonth; i++) {
-            const isToday = i === d.getDate() ? 'today' : '';
-            html += `<div class="cal-day ${isToday}">${i}</div>`;
+            // Tarihi standart string yap (Örn: "2026-03-06")
+            const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+            const isToday = (i === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) ? 'today' : '';
+            
+            // O güne ait notlar varsa ikonlarını takvimde göster (En fazla 3 tane sığar)
+            const dayEvents = this.events[dateStr] || [];
+            let indicators = '<div class="day-indicators">';
+            dayEvents.slice(0, 3).forEach(ev => {
+                indicators += `<i data-lucide="${ev.icon}"></i>`;
+            });
+            indicators += '</div>';
+
+            html += `<div class="cal-day ${isToday}" data-date="${dateStr}">${i} ${indicators}</div>`;
         }
-        document.getElementById('calGrid').innerHTML = html;
+        
+        const gridEl = document.getElementById('calGrid');
+        if (gridEl) {
+            gridEl.innerHTML = html;
+            lucide.createIcons();
+            
+            // Günlere Tıklama Özelliği
+            gridEl.querySelectorAll('.cal-day').forEach(dayEl => {
+                dayEl.addEventListener('click', (e) => this.openModal(e.currentTarget.dataset.date));
+            });
+        }
+    },
+
+    bindModalEvents() {
+        // Modalı Kapat
+        document.getElementById('closeModalBtn')?.addEventListener('click', () => {
+            document.getElementById('calendarModal').classList.add('hidden');
+        });
+
+        // İkon Seçimi
+        document.querySelectorAll('.icon-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.icon-btn').forEach(b => b.classList.remove('active'));
+                const clickedBtn = e.currentTarget;
+                clickedBtn.classList.add('active');
+                this.selectedIcon = clickedBtn.dataset.icon;
+            });
+        });
+
+        // Yeni Not Ekle
+        document.getElementById('saveCalNoteBtn')?.addEventListener('click', () => {
+            const input = document.getElementById('calNoteInput');
+            const text = input.value.trim();
+            if (!text || !this.selectedDateStr) return;
+
+            // Eğer o güne ait dizi yoksa oluştur
+            if (!this.events[this.selectedDateStr]) {
+                this.events[this.selectedDateStr] = [];
+            }
+
+            // Veriyi Objeye Ekle
+            this.events[this.selectedDateStr].push({
+                id: Date.now().toString(), // Benzersiz ID
+                icon: this.selectedIcon,
+                text: text
+            });
+
+            this.save();
+            input.value = '';
+            this.renderDayNotes(); // Modal içini tazele
+            this.renderGrid(); // Arka plandaki takvime ikonları ekle
+        });
+    },
+
+    openModal(dateStr) {
+        this.selectedDateStr = dateStr;
+        
+        // Tarihi Türkçeye Çevir (Örn: "6 Mart 2026")
+        const [y, m, d] = dateStr.split('-');
+        const formattedDate = new Date(y, parseInt(m)-1, d).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+        
+        document.getElementById('modalDateTitle').innerText = formattedDate;
+        document.getElementById('calendarModal').classList.remove('hidden');
+        
+        this.renderDayNotes();
+    },
+
+    renderDayNotes() {
+        const list = document.getElementById('dayNotesList');
+        list.innerHTML = '';
+        
+        const dayEvents = this.events[this.selectedDateStr] || [];
+        
+        dayEvents.forEach(ev => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i data-lucide="${ev.icon}" style="color:var(--accent); width:18px; height:18px;"></i>
+                    <span>${ev.text}</span>
+                </div>
+                <span class="delete-btn" style="cursor:pointer; color:red;">✕</span>
+            `;
+            
+            // Silme İşlemi
+            li.querySelector('.delete-btn').addEventListener('click', () => {
+                this.events[this.selectedDateStr] = this.events[this.selectedDateStr].filter(item => item.id !== ev.id);
+                if (this.events[this.selectedDateStr].length === 0) {
+                    delete this.events[this.selectedDateStr]; // Dizi boşaldıysa o günü veritabanından tamamen sil
+                }
+                this.save();
+                this.renderDayNotes();
+                this.renderGrid();
+            });
+
+            list.appendChild(li);
+        });
+        lucide.createIcons();
     }
 };
 
