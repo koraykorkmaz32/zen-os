@@ -97,7 +97,7 @@
         <div class="welcome-text"><span data-i18n="welcome">Hoş geldin</span>, <span id="userNameDisp">Şef</span></div>
         <div style="display: flex; gap: 10px;">
             <button class="btn-primary" onclick="toggleTheme()"><i data-lucide="sun"></i></button>
-            <button class="btn-primary" onclick="exportPDF()"><i data-lucide="download"></i></button>
+            
             <button class="btn-primary" onclick="toggleModal('settingsModal')"><i data-lucide="settings"></i></button>
             <button class="btn-primary" onclick="logOut()" style="background: #ef4444; color: #fff;"><i data-lucide="log-out"></i></button>
         </div>
@@ -245,7 +245,7 @@
     /* =========================================
        0. ÇEVİRİ MOTORU (i18n)
        ========================================= */
-    const dict = {
+   const dict = {
         tr: {
             loading: "ZEN OS BAŞLATILIYOR...", welcome: "Hoş geldin", motivation: "Motivasyon", focus: "Deep Focus",
             water: "Su Takibi", planner: "Planlayıcı", todo: "To-Do List", budget: "Bütçe Takibi", mealPlan: "Haftalık Yemek Planı",
@@ -254,7 +254,19 @@
             todoPlace: "Ne yapıyoruz?", budgetPlace: "Gider: 500", namePlace: "İsminiz...", notePlace: "Planınız nedir?",
             focusAlert: "Focus Bitti! ✨", printTitle: "✨ Haftalık Gurme Yemek Planı ✨", printSub: "AİLE MENÜSÜ", habitHead: "Alışkanlık",
             daysShort: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'], daysLong: ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'],
-            meals: ['Sabah','Ara 1','Öğle','Ara 2','Akşam'], quotes: ["Gülümse Şef, bugün harika bir gün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Küçük adımlar, büyük hayaller."]
+            meals: ['Sabah','Ara 1','Öğle','Ara 2','Akşam'], 
+            quotes: [
+                "Gülümse, bugün harika bir gün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Küçük adımlar, büyük hayaller.",
+                "Başlamak için mükemmel olmayı bekleme.", "Disiplin, özgürlüğün anahtarıdır.", "Geleceği tahmin etmenin en iyi yolu onu yaratmaktır.",
+                "Düşün, planla, uygula.", "Sınırlarını sen belirlersin.", "Bahaneler sonuç doğurmaz.",
+                "Başarı tesadüf değildir, bir seçimdir.", "Zihnin sakin, ruhun özgür olsun.", "Hata yapmaktan değil, denememekten kork.",
+                "Bugün yapacağın seçimler yarınını şekillendirir.", "En zor adım her zaman ilk adımdır.", "Sabır, acı ama meyvesi tatlıdır.",
+                "Hayallerine giden yolda asla pes etme.", "Her yeni gün, yeni bir şanstır.", "Kendine inan, gerisi gelecektir.",
+                "Mükemmeliyetçilik ilerlemenin düşmanıdır.", "Zamanın en değerli hazinendir, iyi kullan.", "Zorluklar seni güçlendirmek için var.",
+                "Motivasyon başlatır, alışkanlık devam ettirir.", "Zirveye giden yol düz değildir.", "Yapabileceğine inanırsan, yolun yarısını geçmişsindir.",
+                "Hayat, konfor alanının bittiği yerde başlar.", "Küçük başarıları kutlamayı unutma.", "Başkalarıyla değil, dünkü kendinle yarış.",
+                "Odaklan, çalış, başar.", "Hayal et, inan ve gerçekleştir.", "Sen buna değersin, yola devam! 🚀"
+            ]
         },
         en: {
             loading: "ZEN OS STARTING...", welcome: "Welcome", motivation: "Motivation", focus: "Deep Focus",
@@ -264,7 +276,19 @@
             todoPlace: "What's next?", budgetPlace: "Expense: 50", namePlace: "Your Name...", notePlace: "Your plan?",
             focusAlert: "Focus Completed! ✨", printTitle: "✨ Weekly Gourmet Meal Plan ✨", printSub: "FAMILY MENU", habitHead: "Habit",
             daysShort: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], daysLong: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
-            meals: ['Breakfast','Snack 1','Lunch','Snack 2','Dinner'], quotes: ["Smile, today is a great day. 🌸", "What you focus on grows. ✨", "Small steps, big dreams."]
+            meals: ['Breakfast','Snack 1','Lunch','Snack 2','Dinner'], 
+            quotes: [
+                "Smile, today is a great day. 🌸", "What you focus on grows. ✨", "Small steps, big dreams.",
+                "Don't wait for perfection to start.", "Discipline is the key to freedom.", "The best way to predict the future is to create it.",
+                "Think, plan, execute.", "You define your own limits.", "Excuses don't get results.",
+                "Success is not an accident, it's a choice.", "Keep your mind calm, your soul free.", "Fear not making mistakes, but not trying.",
+                "The choices you make today shape your tomorrow.", "The hardest step is always the first one.", "Patience is bitter, but its fruit is sweet.",
+                "Never give up on the way to your dreams.", "Every new day is a new chance.", "Believe in yourself, the rest will follow.",
+                "Perfectionism is the enemy of progress.", "Time is your most valuable treasure, use it well.", "Hardships are there to make you stronger.",
+                "Motivation gets you started, habit keeps you going.", "The road to the top is not flat.", "Believe you can, and you're halfway there.",
+                "Life begins at the end of your comfort zone.", "Don't forget to celebrate small wins.", "Compete with who you were yesterday, not others.",
+                "Focus, work, succeed.", "Dream it, believe it, and achieve it.", "You are worth it, keep going! 🚀"
+            ]
         },
         de: {
             loading: "ZEN OS STARTET...", welcome: "Willkommen", motivation: "Motivation", focus: "Tiefer Fokus",
@@ -274,7 +298,19 @@
             todoPlace: "Was steht an?", budgetPlace: "Ausgabe: 50", namePlace: "Dein Name...", notePlace: "Dein Plan?",
             focusAlert: "Fokus Beendet! ✨", printTitle: "✨ Wöchentlicher Gourmet-Speiseplan ✨", printSub: "FAMILIENMENÜ", habitHead: "Gewohnheit",
             daysShort: ['Mo','Di','Mi','Do','Fr','Sa','So'], daysLong: ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'],
-            meals: ['Frühstück','Snack 1','Mittagessen','Snack 2','Abendessen'], quotes: ["Lächle, heute ist ein toller Tag. 🌸", "Worauf du dich fokussierst, wächst. ✨", "Kleine Schritte, große Träume."]
+            meals: ['Frühstück','Snack 1','Mittagessen','Snack 2','Abendessen'], 
+            quotes: [
+                "Lächle, heute ist ein toller Tag. 🌸", "Worauf du dich fokussierst, wächst. ✨", "Kleine Schritte, große Träume.",
+                "Warte nicht auf Perfektion, um anzufangen.", "Disziplin ist der Schlüssel zur Freiheit.", "Der beste Weg, die Zukunft vorauszusagen, ist, sie zu erschaffen.",
+                "Denken, planen, ausführen.", "Du definierst deine eigenen Grenzen.", "Ausreden bringen keine Ergebnisse.",
+                "Erfolg ist kein Zufall, es ist eine Entscheidung.", "Halte deinen Geist ruhig, deine Seele frei.", "Fürchte dich nicht davor, Fehler zu machen, sondern davor, es nicht zu versuchen.",
+                "Die Entscheidungen von heute formen dein Morgen.", "Der schwerste Schritt ist immer der erste.", "Geduld ist bitter, aber ihre Frucht ist süß.",
+                "Gib niemals auf dem Weg zu deinen Träumen auf.", "Jeder neue Tag ist eine neue Chance.", "Glaube an dich selbst, der Rest folgt von allein.",
+                "Perfektionismus ist der Feind des Fortschritts.", "Zeit ist dein wertvollster Schatz, nutze sie gut.", "Schwierigkeiten sind dazu da, dich stärker zu machen.",
+                "Motivation lässt dich anfangen, Gewohnheit lässt dich weitermachen.", "Der Weg nach oben ist nicht flach.", "Glaube daran, dass du es kannst, und du hast die halbe Miete.",
+                "Das Leben beginnt am Ende deiner Komfortzone.", "Vergiss nicht, kleine Erfolge zu feiern.", "Konkurriere mit dem, der du gestern warst, nicht mit anderen.",
+                "Fokussieren, arbeiten, erfolgreich sein.", "Träume es, glaube daran und erreiche es.", "Du bist es wert, mach weiter! 🚀"
+            ]
         },
         fr: {
             loading: "ZEN OS DÉMARRE...", welcome: "Bienvenue", motivation: "Motivation", focus: "Concentration Profonde",
@@ -284,7 +320,19 @@
             todoPlace: "Que faire?", budgetPlace: "Dépense: 50", namePlace: "Votre Nom...", notePlace: "Votre plan?",
             focusAlert: "Concentration Terminée! ✨", printTitle: "✨ Plan de Repas Gourmet Hebdomadaire ✨", printSub: "MENU FAMILIAL", habitHead: "Habitude",
             daysShort: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'], daysLong: ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'],
-            meals: ['Petit-déjeuner','Collation 1','Déjeuner','Collation 2','Dîner'], quotes: ["Souriez, c'est une belle journée. 🌸", "Ce sur quoi vous vous concentrez grandit. ✨", "Petits pas, grands rêves."]
+            meals: ['Petit-déjeuner','Collation 1','Déjeuner','Collation 2','Dîner'], 
+            quotes: [
+                "Souriez, c'est une belle journée. 🌸", "Ce sur quoi vous vous concentrez grandit. ✨", "Petits pas, grands rêves.",
+                "N'attendez pas la perfection pour commencer.", "La discipline est la clé de la liberté.", "La meilleure façon de prédire l'avenir est de le créer.",
+                "Pensez, planifiez, exécutez.", "Vous définissez vos propres limites.", "Les excuses ne donnent pas de résultats.",
+                "Le succès n'est pas un accident, c'est un choix.", "Gardez l'esprit calme, l'âme libre.", "Ne craignez pas de faire des erreurs, mais de ne pas essayer.",
+                "Les choix que vous faites aujourd'hui façonnent votre avenir.", "Le pas le plus difficile est toujours le premier.", "La patience est amère, mais son fruit est doux.",
+                "N'abandonnez jamais sur le chemin de vos rêves.", "Chaque nouveau jour est une nouvelle chance.", "Croyez en vous, le reste suivra.",
+                "Le perfectionnisme est l'ennemi du progrès.", "Le temps est votre trésor le plus précieux, utilisez-le bien.", "Les difficultés sont là pour vous rendre plus fort.",
+                "La motivation vous fait commencer, l'habitude vous fait continuer.", "La route vers le sommet n'est pas plate.", "Croyez que vous pouvez, et vous avez fait la moitié du chemin.",
+                "La vie commence à la fin de votre zone de confort.", "N'oubliez pas de célébrer les petites victoires.", "Rivalisez avec qui vous étiez hier, pas avec les autres.",
+                "Concentrez-vous, travaillez, réussissez.", "Rêvez-le, croyez-le et réalisez-le.", "Tu le vaux bien, continue ! 🚀"
+            ]
         }
     };
 
