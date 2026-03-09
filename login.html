@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zen OS | Giriş Yap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* --- TASARIM VE DEĞİŞKENLER --- */
+        :root {
+            --bg: #020617; --panel: rgba(15, 23, 42, 0.85);
+            --accent: #38bdf8; --text: #f8fafc; --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); 
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; 
+            user-select: none; /* Kopyalamayı zorlaştırır */
+            padding: 20px;
+        }
+
+        /* GÜVENLİK: KODU ÇALANLAR İÇİN GİZLİ KALKAN */
+        #securityBreach { display: none; color: #ef4444; text-align: center; font-size: 1.5rem; font-weight: bold; }
+
+        .auth-container {
+            background: var(--panel); backdrop-filter: blur(20px); border-radius: 28px; 
+            padding: 40px; border: 1px solid var(--border); width: 100%; max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+        }
+
+        .auth-header { text-align: center; margin-bottom: 30px; }
+        .auth-header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; }
+        .auth-header p { font-size: 0.85rem; opacity: 0.6; margin-top: 5px; }
+
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--accent); opacity: 0.7; width: 18px; }
+        .input-field { 
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--border); 
+            color: var(--text); padding: 14px 14px 14px 45px; border-radius: 14px; 
+            font-family: inherit; font-size: 0.9rem; transition: 0.3s; outline: none;
+        }
+        .input-field:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+
+        .btn-primary { 
+            background: var(--accent); color: #000; border: none; width: 100%; 
+            padding: 14px; border-radius: 14px; font-weight: 800; font-size: 1rem; 
+            cursor: pointer; transition: 0.2s; margin-top: 10px;
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3); }
+
+        .auth-links { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; font-size: 0.8rem; }
+        .auth-link { color: var(--accent); cursor: pointer; text-decoration: none; opacity: 0.8; transition: 0.2s; }
+        .auth-link:hover { opacity: 1; text-decoration: underline; }
+
+        /* CHECKBOX VE ŞARTLAR */
+        .terms-group { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; margin: 15px 0; opacity: 0.8; }
+        .terms-group input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+
+        /* MODAL (TERMS OF USE) */
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .hidden { display: none !important; }
+        .modal-content { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; }
+        
+        /* FORM GEÇİŞ ANİMASYONU İÇİN */
+        .auth-form { transition: opacity 0.3s ease; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div id="securityBreach">Bu yazılım lisanssız kullanılamaz. Bağlantı reddedildi.</div>
+
+<div class="auth-container" id="authBox">
+    
+    <div id="loginForm" class="auth-form">
+        <div class="auth-header">
+            <h1>ZEN OS <span style="font-weight:300; opacity:0.5;">PRO</span></h1>
+            <p>Sisteme giriş yapın</p>
+        </div>
+        
+        <div class="input-group">
+            <i data-lucide="mail"></i>
+            <input type="email" id="loginEmail" class="input-field" placeholder="E-posta adresiniz">
+        </div>
+        <div class="input-group">
+            <i data-lucide="lock"></i>
+            <input type="password" id="loginPassword" class="input-field" placeholder="Şifreniz">
+        </div>
+        
+        <div class="auth-links" style="justify-content: flex-end; margin-bottom: 15px;">
+            <span class="auth-link" onclick="alert('Şifre sıfırlama linki yakında Firebase ile bağlanacak.')">Şifremi unuttum</span>
+        </div>
+
+        <button class="btn-primary" onclick="handleLogin()">Giriş Yap</button>
+        
+        <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; opacity: 0.7;">
+            Üye değil misin? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Hemen Kayıt Ol</span>
+        </div>
+    </div>
+
+    <div id="registerForm" class="auth-form hidden">
+        <div class="auth-header">
+            <h1>Kayıt Ol</h1>
+            <p>Zen OS ayrıcalıklarına katıl</p>
+        </div>
+        
+        <div class="input-group">
+            <i data-lucide="user"></i>
+            <input type="text" id="regName" class="input-field" placeholder="Adınız Soyadınız">
+        </div>
+        <div class="input-group">
+            <i data-lucide="mail"></i>
+            <input type="email" id="regEmail" class="input-field" placeholder="E-posta adresiniz">
+        </div>
+        <div class="input-group">
+            <i data-lucide="lock"></i>
+            <input type="password" id="regPassword" class="input-field" placeholder="Şifreniz">
+        </div>
+        <div class="input-group">
+            <i data-lucide="key"></i>
+            <input type="text" id="regCode" class="input-field" placeholder="Satın Alma Kodu (Lisans)" style="border-color: var(--accent);">
+        </div>
+
+        <div class="terms-group">
+            <input type="checkbox" id="termsCheck">
+            <label for="termsCheck"><span class="auth-link" onclick="toggleModal('termsModal')">Kullanım Şartları</span>'nı okudum ve anladım.</label>
+        </div>
+
+        <button class="btn-primary" onclick="handleRegister()">Üye Ol</button>
+        
+        <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; opacity: 0.7;">
+            Zaten üye misin? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Giriş Yap</span>
+        </div>
+    </div>
+</div>
+
+<div id="termsModal" class="modal hidden">
+    <div class="modal-content">
+        <h2 style="color: var(--accent); margin-bottom: 15px;">Kullanım Şartları</h2>
+        <p style="font-size: 0.85rem; line-height: 1.6; opacity: 0.8; margin-bottom: 20px;">
+            1. Bu yazılımın tüm hakları saklıdır. Kopyalanması, çoğaltılması veya izinsiz dağıtılması yasaktır.<br><br>
+            2. Satın alma kodları tek kullanımlıktır ve başkalarıyla paylaşılamaz.<br><br>
+            3. Sisteme girilen kişisel veriler (alışkanlıklar, bütçe, notlar) Firebase altyapısı ile uçtan uca güvenli bir şekilde saklanır.<br><br>
+            4. Şef, kurallara uymayan hesapları dilediği zaman askıya alma hakkını saklı tutar.
+        </p>
+        <button class="btn-primary" onclick="toggleModal('termsModal')">Okudum, Kapat</button>
+    </div>
+</div>
+
+<script>
+    lucide.createIcons();
+
+    /* =========================================
+       1. GÜVENLİK DUVARI (DOMAIN LOCK)
+       ========================================= */
+    const allowedDomains = ["localhost", "127.0.0.1", "koraykorkmaz32.github.io"];
+    const currentDomain = window.location.hostname;
+
+    // Eğer kod başka bir siteye kopyalanırsa veya boş bir dosyada açılırsa:
+    if (!allowedDomains.includes(currentDomain) && currentDomain !== "") {
+        document.getElementById('authBox').style.display = 'none';
+        document.getElementById('securityBreach').style.display = 'block';
+    }
+
+    /* =========================================
+       2. ARAYÜZ KONTROLLERİ
+       ========================================= */
+    function toggleForms() {
+        const login = document.getElementById('loginForm');
+        const register = document.getElementById('registerForm');
+        
+        if (login.classList.contains('hidden')) {
+            register.classList.add('hidden');
+            login.classList.remove('hidden');
+        } else {
+            login.classList.add('hidden');
+            register.classList.remove('hidden');
+        }
+    }
+
+    function toggleModal(id) {
+        document.getElementById(id).classList.toggle('hidden');
+    }
+
+    /* =========================================
+       3. FIREBASE HAZIRLIK FONKSİYONLARI
+       ========================================= */
+    function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const pass = document.getElementById('loginPassword').value;
+        
+        if(!email || !pass) {
+            alert("Lütfen e-posta ve şifrenizi girin."); return;
+        }
+        
+        console.log("Giriş yapılıyor...", email);
+        // İLERİDE BURAYA GELECEK KOD: 
+        // firebase.auth().signInWithEmailAndPassword(email, pass).then(() => window.location.href='index.html');
+        
+        alert("Bağlantı başarılı (Simülasyon). Sizi ana sayfaya yönlendiriyorum...");
+        window.location.href = "index.html"; // Geçici yönlendirme
+    }
+
+    function handleRegister() {
+        const name = document.getElementById('regName').value;
+        const email = document.getElementById('regEmail').value;
+        const pass = document.getElementById('regPassword').value;
+        const code = document.getElementById('regCode').value;
+        const terms = document.getElementById('termsCheck').checked;
+
+        if(!name || !email || !pass || !code) {
+            alert("Lütfen tüm alanları doldurun."); return;
+        }
+        if(!terms) {
+            alert("Kayıt olmak için kullanım şartlarını kabul etmelisiniz."); return;
+        }
+
+        console.log("Kayıt isteği alındı. Kod kontrol ediliyor:", code);
+        // İLERİDE BURAYA GELECEK KOD:
+        // 1. Veritabanından (Lisanslar tablosundan) 'code' geçerli mi kontrol et.
+        // 2. firebase.auth().createUserWithEmailAndPassword(email, pass)
+        // 3. Kullanıcının adını profiline kaydet.
+
+        alert("Kayıt başarılı (Simülasyon). Satın alma kodunuz doğrulandı!");
+        toggleForms(); // Kayıttan sonra giriş ekranına at
+    }
+</script>
+</body>
+</html>
