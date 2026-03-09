@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zen OS | Giriş Yap</title>
+    <title>Zen OS | Sisteme Giriş</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         /* --- TASARIM VE DEĞİŞKENLER --- */
         :root {
@@ -18,12 +22,11 @@
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); 
             min-height: 100vh; display: flex; align-items: center; justify-content: center; 
-            user-select: none; /* Kopyalamayı zorlaştırır */
-            padding: 20px;
+            user-select: none; padding: 20px;
         }
 
-        /* GÜVENLİK: KODU ÇALANLAR İÇİN GİZLİ KALKAN */
-        #securityBreach { display: none; color: #ef4444; text-align: center; font-size: 1.5rem; font-weight: bold; }
+        /* GÜVENLİK KİLİDİ */
+        #securityBreach { display: none; color: #ef4444; text-align: center; font-size: 1.2rem; font-weight: bold; background: rgba(239, 68, 68, 0.1); padding: 20px; border-radius: 15px; border: 1px solid #ef4444; }
 
         .auth-container {
             background: var(--panel); backdrop-filter: blur(20px); border-radius: 28px; 
@@ -47,30 +50,32 @@
         .btn-primary { 
             background: var(--accent); color: #000; border: none; width: 100%; 
             padding: 14px; border-radius: 14px; font-weight: 800; font-size: 1rem; 
-            cursor: pointer; transition: 0.2s; margin-top: 10px;
+            cursor: pointer; transition: 0.2s; margin-top: 10px; display: flex; justify-content: center; align-items: center;
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3); }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
         .auth-links { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; font-size: 0.8rem; }
         .auth-link { color: var(--accent); cursor: pointer; text-decoration: none; opacity: 0.8; transition: 0.2s; }
         .auth-link:hover { opacity: 1; text-decoration: underline; }
 
-        /* CHECKBOX VE ŞARTLAR */
         .terms-group { display: flex; align-items: center; gap: 10px; font-size: 0.8rem; margin: 15px 0; opacity: 0.8; }
         .terms-group input[type="checkbox"] { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
 
-        /* MODAL (TERMS OF USE) */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .hidden { display: none !important; }
         .modal-content { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 25px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; }
         
-        /* FORM GEÇİŞ ANİMASYONU İÇİN */
         .auth-form { transition: opacity 0.3s ease; }
     </style>
 </head>
 <body oncontextmenu="return false;">
 
-<div id="securityBreach">Bu yazılım lisanssız kullanılamaz. Bağlantı reddedildi.</div>
+<div id="securityBreach">
+    <i data-lucide="shield-alert" style="width: 48px; height: 48px; margin-bottom: 10px;"></i><br>
+    Sistem Erişimi Reddedildi.<br>
+    <span style="font-size: 0.8rem; font-weight: 400; opacity: 0.8;">Bu yazılım lisanssız bir alan adında çalıştırılamaz.</span>
+</div>
 
 <div class="auth-container" id="authBox">
     
@@ -90,10 +95,10 @@
         </div>
         
         <div class="auth-links" style="justify-content: flex-end; margin-bottom: 15px;">
-            <span class="auth-link" onclick="alert('Şifre sıfırlama linki yakında Firebase ile bağlanacak.')">Şifremi unuttum</span>
+            <span class="auth-link" onclick="resetPassword()">Şifremi unuttum</span>
         </div>
 
-        <button class="btn-primary" onclick="handleLogin()">Giriş Yap</button>
+        <button class="btn-primary" id="loginBtn" onclick="handleLogin()">Giriş Yap</button>
         
         <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; opacity: 0.7;">
             Üye değil misin? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Hemen Kayıt Ol</span>
@@ -116,7 +121,7 @@
         </div>
         <div class="input-group">
             <i data-lucide="lock"></i>
-            <input type="password" id="regPassword" class="input-field" placeholder="Şifreniz">
+            <input type="password" id="regPassword" class="input-field" placeholder="Şifreniz (En az 6 hane)">
         </div>
         <div class="input-group">
             <i data-lucide="key"></i>
@@ -128,7 +133,7 @@
             <label for="termsCheck"><span class="auth-link" onclick="toggleModal('termsModal')">Kullanım Şartları</span>'nı okudum ve anladım.</label>
         </div>
 
-        <button class="btn-primary" onclick="handleRegister()">Üye Ol</button>
+        <button class="btn-primary" id="regBtn" onclick="handleRegister()">Üye Ol</button>
         
         <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; opacity: 0.7;">
             Zaten üye misin? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Giriş Yap</span>
@@ -138,11 +143,11 @@
 
 <div id="termsModal" class="modal hidden">
     <div class="modal-content">
-        <h2 style="color: var(--accent); margin-bottom: 15px;">Kullanım Şartları</h2>
+        <h2 style="color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text"></i> Kullanım Şartları</h2>
         <p style="font-size: 0.85rem; line-height: 1.6; opacity: 0.8; margin-bottom: 20px;">
             1. Bu yazılımın tüm hakları saklıdır. Kopyalanması, çoğaltılması veya izinsiz dağıtılması yasaktır.<br><br>
             2. Satın alma kodları tek kullanımlıktır ve başkalarıyla paylaşılamaz.<br><br>
-            3. Sisteme girilen kişisel veriler (alışkanlıklar, bütçe, notlar) Firebase altyapısı ile uçtan uca güvenli bir şekilde saklanır.<br><br>
+            3. Sisteme girilen kişisel veriler Firebase altyapısı ile uçtan uca güvenli bir şekilde saklanır.<br><br>
             4. Şef, kurallara uymayan hesapları dilediği zaman askıya alma hakkını saklı tutar.
         </p>
         <button class="btn-primary" onclick="toggleModal('termsModal')">Okudum, Kapat</button>
@@ -153,78 +158,133 @@
     lucide.createIcons();
 
     /* =========================================
-       1. GÜVENLİK DUVARI (DOMAIN LOCK)
+       1. FIREBASE BAĞLANTISI (SENİN KASAN)
+       ========================================= */
+    const firebaseConfig = {
+        apiKey: "AIzaSyACMszR6WT9YHxgpKTQk9FJtWZzEj2SKZk",
+        authDomain: "productdashboard-12fd0.firebaseapp.com",
+        databaseURL: "https://productdashboard-12fd0-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "productdashboard-12fd0",
+        storageBucket: "productdashboard-12fd0.firebasestorage.app",
+        messagingSenderId: "273234191782",
+        appId: "1:273234191782:web:2d611bf016ed9ffdd4db67",
+        measurementId: "G-QHXLWNWYN6"
+    };
+
+    // Firebase'i Başlat
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+
+    /* =========================================
+       2. GÜVENLİK DUVARI (DOMAIN LOCK)
        ========================================= */
     const allowedDomains = ["localhost", "127.0.0.1", "koraykorkmaz32.github.io"];
     const currentDomain = window.location.hostname;
 
-    // Eğer kod başka bir siteye kopyalanırsa veya boş bir dosyada açılırsa:
     if (!allowedDomains.includes(currentDomain) && currentDomain !== "") {
         document.getElementById('authBox').style.display = 'none';
         document.getElementById('securityBreach').style.display = 'block';
     }
 
+    // Kullanıcı zaten giriş yapmışsa direkt içeri al
+    auth.onAuthStateChanged((user) => {
+        if (user && allowedDomains.includes(currentDomain)) {
+            window.location.href = "index.html";
+        }
+    });
+
     /* =========================================
-       2. ARAYÜZ KONTROLLERİ
+       3. ARAYÜZ KONTROLLERİ
        ========================================= */
     function toggleForms() {
         const login = document.getElementById('loginForm');
         const register = document.getElementById('registerForm');
-        
-        if (login.classList.contains('hidden')) {
-            register.classList.add('hidden');
-            login.classList.remove('hidden');
-        } else {
-            login.classList.add('hidden');
-            register.classList.remove('hidden');
-        }
+        if (login.classList.contains('hidden')) { register.classList.add('hidden'); login.classList.remove('hidden'); } 
+        else { login.classList.add('hidden'); register.classList.remove('hidden'); }
     }
 
-    function toggleModal(id) {
-        document.getElementById(id).classList.toggle('hidden');
-    }
+    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
 
     /* =========================================
-       3. FIREBASE HAZIRLIK FONKSİYONLARI
+       4. GİRİŞ VE KAYIT İŞLEMLERİ
        ========================================= */
+    
+    // GİRİŞ YAP
     function handleLogin() {
-        const email = document.getElementById('loginEmail').value;
+        const email = document.getElementById('loginEmail').value.trim();
         const pass = document.getElementById('loginPassword').value;
+        const btn = document.getElementById('loginBtn');
         
-        if(!email || !pass) {
-            alert("Lütfen e-posta ve şifrenizi girin."); return;
-        }
+        if(!email || !pass) { alert("Lütfen e-posta ve şifrenizi girin."); return; }
         
-        console.log("Giriş yapılıyor...", email);
-        // İLERİDE BURAYA GELECEK KOD: 
-        // firebase.auth().signInWithEmailAndPassword(email, pass).then(() => window.location.href='index.html');
-        
-        alert("Bağlantı başarılı (Simülasyon). Sizi ana sayfaya yönlendiriyorum...");
-        window.location.href = "index.html"; // Geçici yönlendirme
+        btn.disabled = true; btn.innerText = "Giriş Yapılıyor...";
+
+        auth.signInWithEmailAndPassword(email, pass)
+            .then(() => {
+                window.location.href = "index.html"; // Başarılıysa içeri al
+            })
+            .catch((error) => {
+                btn.disabled = false; btn.innerText = "Giriş Yap";
+                let msg = "Bir hata oluştu.";
+                if(error.code === 'auth/user-not-found') msg = "Bu e-posta kayıtlı değil.";
+                if(error.code === 'auth/wrong-password') msg = "Şifre hatalı.";
+                alert(msg);
+            });
     }
 
+    // KAYIT OL
     function handleRegister() {
-        const name = document.getElementById('regName').value;
-        const email = document.getElementById('regEmail').value;
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
         const pass = document.getElementById('regPassword').value;
-        const code = document.getElementById('regCode').value;
+        const code = document.getElementById('regCode').value.trim();
         const terms = document.getElementById('termsCheck').checked;
+        const btn = document.getElementById('regBtn');
 
-        if(!name || !email || !pass || !code) {
-            alert("Lütfen tüm alanları doldurun."); return;
-        }
-        if(!terms) {
-            alert("Kayıt olmak için kullanım şartlarını kabul etmelisiniz."); return;
-        }
+        if(!name || !email || !pass || !code) { alert("Lütfen tüm alanları doldurun."); return; }
+        if(pass.length < 6) { alert("Şifre en az 6 haneli olmalıdır."); return; }
+        if(!terms) { alert("Kayıt olmak için kullanım şartlarını kabul etmelisiniz."); return; }
 
-        console.log("Kayıt isteği alındı. Kod kontrol ediliyor:", code);
-        // İLERİDE BURAYA GELECEK KOD:
-        // 1. Veritabanından (Lisanslar tablosundan) 'code' geçerli mi kontrol et.
-        // 2. firebase.auth().createUserWithEmailAndPassword(email, pass)
-        // 3. Kullanıcının adını profiline kaydet.
+        // MASTER LİSANS KODU (BURAYI DEĞİŞTİREBİLİRSİN)
+        const MASTER_CODE = "ZEN-PRO-2026";
+        if(code !== MASTER_CODE) { alert("Geçersiz satın alma kodu! Lütfen lisansınızı kontrol edin."); return; }
 
-        alert("Kayıt başarılı (Simülasyon). Satın alma kodunuz doğrulandı!");
-        toggleForms(); // Kayıttan sonra giriş ekranına at
+        btn.disabled = true; btn.innerText = "Kayıt Yapılıyor...";
+
+        auth.createUserWithEmailAndPassword(email, pass)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                // Kullanıcıyı veritabanına kaydet
+                return db.ref('users/' + user.uid).set({
+                    fullName: name,
+                    email: email,
+                    licenseCode: code,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP
+                });
+            })
+            .then(() => {
+                // İsmini tarayıcıya kaydet ki arayüzde "Hoş geldin Koray" yazsın
+                localStorage.setItem('zen_name', name);
+                alert("Kayıt başarılı! Sisteme giriş yapıyorsunuz...");
+                window.location.href = "index.html";
+            })
+            .catch((error) => {
+                btn.disabled = false; btn.innerText = "Üye Ol";
+                let msg = error.message;
+                if(error.code === 'auth/email-already-in-use') msg = "Bu e-posta adresi zaten kullanımda.";
+                alert(msg);
+            });
+    }
+
+    // ŞİFRE SIFIRLAMA
+    function resetPassword() {
+        const email = document.getElementById('loginEmail').value.trim();
+        if(!email) { alert("Lütfen şifresini sıfırlamak istediğiniz e-posta adresini kutucuğa yazın ve tekrar tıklayın."); return; }
+        
+        auth.sendPasswordResetEmail(email)
+            .then(() => alert("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi! Lütfen gelen kutunuzu kontrol edin."))
+            .catch((error) => alert("Hata: " + error.message));
     }
 </script>
 </body>
