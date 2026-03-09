@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Zen OS | Pro Terminal</title>
     <link rel="manifest" href="manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -20,10 +20,7 @@
         [data-theme="zen"] { --bg: #fff5f8; --panel: rgba(255, 255, 255, 0.98); --accent: #ff7eb9; --text: #2d3436; --border: rgba(255, 126, 185, 0.2); }
         
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        /* MOBİL KAYMA ENGELLEYİCİ ANA KİLİT */
         html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
-        
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; min-height: 100vh; padding: 15px; user-select: none; }
         .container { max-width: 1700px; margin: 0 auto; display: none; width: 100%; }
         
@@ -62,8 +59,9 @@
         .check-box.checked::after { content: '✓'; color: #000; font-size: 14px; font-weight: 900; }
 
         /* UI ELEMANLARI */
-        .btn-primary { background: var(--accent); color: #000; border: none; padding: 12px 18px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 14px; cursor: pointer; }
+        .btn-primary { background: var(--accent); color: #000; border: none; padding: 12px 18px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
         .input-field { background: rgba(0,0,0,0.25); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; width: 100%; font-family: inherit; outline: none; }
         .item-list { list-style: none; overflow-y: auto; flex: 1; width: 100%; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-bottom: 6px; font-size: 0.85rem; width: 100%; }
@@ -80,12 +78,12 @@
         .meal-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.7rem; padding: 6px; margin-bottom: 4px; border: none; outline: none; }
         .meal-label { font-size: 0.55rem; opacity: 0.4; display: block; margin-bottom: 2px; }
 
-        /* MOBİL STACK (SIKI KİLİT) */
+        /* MOBİL STACK */
         @media (max-width: 1024px) {
             .grid-layout { grid-template-columns: 1fr; gap: 10px; }
-            .panel { grid-column: span 1 !important; height: auto; padding: 15px; } /* Mobilde padding kısıldı */
+            .panel { grid-column: span 1 !important; height: auto; padding: 15px; }
             .meal-table { grid-template-columns: 1fr; }
-            .water-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; } /* Mobilde bardak aralığı kısıldı */
+            .water-grid { grid-template-columns: repeat(5, 1fr); gap: 6px; }
             .glass { min-height: 50px; }
             .top-bar { flex-direction: column; gap: 15px; text-align: center; padding: 15px; }
             body { padding: 10px; }
@@ -104,7 +102,7 @@
         <div class="welcome-text">Hoş geldin, <span id="userNameDisp">Şef</span></div>
         <div style="display: flex; gap: 10px;">
             <button class="btn-primary" onclick="toggleTheme()" title="Tema"><i data-lucide="sun"></i></button>
-            <button class="btn-primary" onclick="exportPDF()" title="PDF İndir"><i data-lucide="download"></i></button>
+            <button class="btn-primary" onclick="exportPDF()" title="Tüm Paneli İndir"><i data-lucide="download"></i></button>
             <button class="btn-primary" onclick="toggleModal('settingsModal')" title="Ayarlar"><i data-lucide="settings"></i></button>
             <button class="btn-primary" onclick="logOut()" title="Çıkış Yap" style="background: #ef4444; color: #fff;"><i data-lucide="log-out"></i></button>
         </div>
@@ -172,7 +170,12 @@
         </section>
 
         <section class="panel" style="grid-column: span 4;">
-            <h2><i data-lucide="utensils"></i> Haftalık Yemek Planı (5 Öğün)</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h2 style="margin: 0;"><i data-lucide="utensils"></i> Haftalık Yemek Planı</h2>
+                <button class="btn-secondary" onclick="exportMealPDF()" style="padding: 6px 12px; font-size: 0.75rem; color: var(--accent); border-color: var(--accent);">
+                    <i data-lucide="printer" style="width:14px; height:14px;"></i> Çıktı Al
+                </button>
+            </div>
             <div class="meal-table" id="mealGrid"></div>
         </section>
 
@@ -186,6 +189,15 @@
             </div>
         </section>
     </main>
+</div>
+
+<div id="printMealTemplate" style="position: absolute; top: -9999px; left: -9999px; width: 1122px; height: 793px; background: #fffafb; padding: 40px; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box;">
+    <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px dashed #ffb6c1; padding-bottom: 15px;">
+        <h1 style="color: #ff7eb9; font-size: 34px; margin-bottom: 5px; font-weight: 800; letter-spacing: 1px;">✨ Haftalık Gurme Yemek Planı ✨</h1>
+        <p style="color: #636e72; font-size: 16px; font-weight: 600; letter-spacing: 2px;">ZEN OS LIFESTYLE <span style="opacity: 0.4; margin: 0 10px;">|</span> AİLE MENÜSÜ</p>
+    </div>
+    <div id="printMealGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; height: calc(100% - 100px);">
+        </div>
 </div>
 
 <div id="settingsModal" class="modal hidden">
@@ -220,6 +232,13 @@
 </div>
 
 <script>
+    // PWA Motorunu Çalıştır
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA Hatası:', err));
+        });
+    }
+
     lucide.createIcons();
 
     /* =========================================
@@ -232,8 +251,7 @@
         projectId: "productdashboard-12fd0",
         storageBucket: "productdashboard-12fd0.firebasestorage.app",
         messagingSenderId: "273234191782",
-        appId: "1:273234191782:web:2d611bf016ed9ffdd4db67",
-        measurementId: "G-QHXLWNWYN6"
+        appId: "1:273234191782:web:2d611bf016ed9ffdd4db67"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -247,22 +265,18 @@
         document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%'>Lisanssız Kullanım Engellendi.</h1>";
     }
 
-    // AUTH GUARD (Giriş yapmayanı kov)
+    // AUTH GUARD
     auth.onAuthStateChanged((user) => {
         if (!user) {
-            window.location.href = "login.html"; // ÇELİK KAPI: GİRİŞ YAPMAYAN BURAYA DÜŞER
+            window.location.href = "login.html";
         } else {
             currentUid = user.uid;
-            
-            // İsmi Buluttan Çek
             db.ref('users/' + user.uid + '/fullName').once('value').then(snap => {
                 if(snap.exists()) {
                     document.getElementById('userNameDisp').innerText = snap.val();
                     document.getElementById('userNameIn').value = snap.val();
                 }
             });
-
-            // Verileri Buluttan İndir ve Sistemi Başlat
             DB.syncFromCloud().then(() => {
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
@@ -272,17 +286,12 @@
     });
 
     function logOut() {
-        // Çıkış yaparken önceki kişinin verilerini tarayıcıdan temizle
-        for (let key in localStorage) {
-            if (key.startsWith('zen_') && key !== 'zen_theme') { 
-                localStorage.removeItem(key);
-            }
-        }
+        for (let key in localStorage) { if (key.startsWith('zen_') && key !== 'zen_theme') { localStorage.removeItem(key); } }
         auth.signOut().then(() => { window.location.href = "login.html"; });
     }
 
     /* =========================================
-       2. HİBRİT VERİTABANI (Local + Cloud)
+       2. HİBRİT VERİTABANI
        ========================================= */
     const DB = {
         get: (k) => JSON.parse(localStorage.getItem(k)),
@@ -294,18 +303,14 @@
             const snap = await db.ref('users/' + currentUid + '/data').once('value');
             if(snap.exists()) {
                 const cloudData = snap.val();
-                for(let key in cloudData) {
-                    localStorage.setItem(key, JSON.stringify(cloudData[key]));
-                }
+                for(let key in cloudData) { localStorage.setItem(key, JSON.stringify(cloudData[key])); }
             }
         }
     };
 
     /* =========================================
-       3. MODÜLLER VE MANTIK
+       3. MODÜLLER
        ========================================= */
-    
-    // TAKVİM
     const Cal = {
         date: new Date(), selectedDate: null, emoji: '💖', events: {},
         init() { this.events = DB.get('zen_cal_v5') || {}; this.render(); },
@@ -344,7 +349,6 @@
         delNote(id) { this.events[this.selectedDate] = this.events[this.selectedDate].filter(n => n.id !== id); DB.set('zen_cal_v5', this.events); this.renderNotes(); this.render(); }
     };
 
-    // SU TAKİBİ
     const Water = {
         active: [],
         init() {
@@ -354,8 +358,7 @@
         },
         toggle(i) {
             this.active.includes(i) ? this.active = this.active.filter(x=>x!==i) : this.active.push(i);
-            DB.set('zen_water_v5', this.active); localStorage.setItem('zen_water_date', new Date().toDateString());
-            this.render();
+            DB.set('zen_water_v5', this.active); localStorage.setItem('zen_water_date', new Date().toDateString()); this.render();
         },
         render() {
             const grid = document.getElementById('waterGrid'); grid.innerHTML = '';
@@ -368,7 +371,6 @@
         }
     };
 
-    // HABIT & YEMEK
     const Life = {
         days: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'],
         meals: {}, habits: [],
@@ -408,7 +410,6 @@
         }
     };
 
-    // FOCUS
     const Focus = {
         timer: null, timeLeft: 25*60,
         init() { document.getElementById('timerCtrl').onclick = () => this.toggle(); },
@@ -422,7 +423,6 @@
         updateUI() { const m = Math.floor(this.timeLeft/60), s = this.timeLeft%60; document.getElementById('timerDisp').innerText = `${m}:${s.toString().padStart(2,'0')}`; }
     };
 
-    // LİSTELER
     const Lists = {
         todo: [], budget: [],
         init() { this.todo = DB.get('zen_todo_v4') || []; this.budget = DB.get('zen_budget_v4') || []; this.render('todo'); this.render('budget'); },
@@ -435,44 +435,71 @@
         del(type, i) { this[type].splice(i,1); DB.set('zen_'+type+'_v4', this[type]); this.render(type); }
     };
 
-    // YARDIMCI FONKSİYONLAR
     function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
     function toggleTheme() { const b = document.body; b.getAttribute('data-theme')==='zen' ? b.removeAttribute('data-theme') : b.setAttribute('data-theme','zen'); }
-    
     function saveProfile() { 
         const newName = document.getElementById('userNameIn').value;
-        if(newName && currentUid) {
-            db.ref('users/' + currentUid + '/fullName').set(newName).then(() => {
-                document.getElementById('userNameDisp').innerText = newName;
-                toggleModal('settingsModal');
-            });
-        }
+        if(newName && currentUid) { db.ref('users/' + currentUid + '/fullName').set(newName).then(() => { document.getElementById('userNameDisp').innerText = newName; toggleModal('settingsModal'); }); }
     }
 
+    /* --- PDF DIŞA AKTARIM FONKSİYONLARI --- */
+    
+    // 1. TÜM PANELİ İNDİR (Üstteki İkon)
     async function exportPDF() {
         const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'mm', 'a3');
-        const captureArea = document.getElementById('captureArea');
-        html2canvas(captureArea, { scale: 1.5, backgroundColor: '#020617' }).then(canvas => { 
+        html2canvas(document.getElementById('captureArea'), { scale: 1.5, backgroundColor: '#020617' }).then(canvas => { 
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 420, 297); 
             pdf.save('ZenOS_Dashboard.pdf'); 
         });
     }
 
-    // AUTH GUARD İZİN VERDİĞİNDE BURASI ÇALIŞIR
+    // 2. YEMEK PLANINI ÖZEL ŞABLONLA İNDİR (Yakışıklı & Feminen)
+    async function exportMealPDF() {
+        const printGrid = document.getElementById('printMealGrid');
+        printGrid.innerHTML = '';
+        const days = ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
+        const slots = ['Sabah','Ara Öğün 1','Öğle','Ara Öğün 2','Akşam'];
+        const meals = DB.get('zen_meals_v3') || {};
+        const keyDays = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz']; // Veritabanı anahtarları
+
+        days.forEach((d, index) => {
+            const dbKeyDay = keyDays[index];
+            let col = `<div style="background: #ffffff; border: 1px solid #ffe3e8; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(255,126,185,0.05);">`;
+            col += `<h3 style="text-align: center; color: #ff7eb9; margin-bottom: 15px; font-size: 18px; border-bottom: 1px solid #ffe3e8; padding-bottom: 10px;">${d}</h3>`;
+            slots.forEach((s, i) => {
+                const val = meals[dbKeyDay+i] || '-';
+                col += `<div style="margin-bottom: 15px;">`;
+                col += `<span style="display: block; font-size: 11px; color: #b2bec3; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px;">${s}</span>`;
+                col += `<div style="font-size: 13px; font-weight: 600; color: #2d3436; min-height: 25px; border-bottom: 1px dashed #dfe6e9; padding-bottom: 3px;">${val}</div>`;
+                col += `</div>`;
+            });
+            col += `</div>`;
+            printGrid.innerHTML += col;
+        });
+
+        // O gizli tabloyu geçici olarak render etmek için yukarı alıyoruz
+        const target = document.getElementById('printMealTemplate');
+        target.style.top = '0';
+        target.style.left = '0';
+        target.style.zIndex = '-1';
+
+        const { jsPDF } = window.jspdf; 
+        const pdf = new jsPDF('l', 'px', [1122, 793]); // A4 boyutuna uygun piksel ayarı
+
+        html2canvas(target, { scale: 2, backgroundColor: '#fffafb' }).then(canvas => { 
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 1122, 793); 
+            pdf.save('ZenOS_Yemek_Plani.pdf'); 
+            
+            // İşlem bitince şablonu tekrar gizle
+            target.style.top = '-9999px';
+            target.style.left = '-9999px';
+        });
+    }
+
     function startApp() {
-        const q = ["Gülümse, bugün senin günün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Zihnin sakin, ruhun özgür olsun.", "Küçük adımlar, büyük hayaller."];
+        const q = ["Gülümse Koray Şef, bugün harika bir gün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Zihnin sakin, ruhun özgür olsun.", "Küçük adımlar, büyük hayaller."];
         document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
         Cal.init(); Water.init(); Life.init(); Focus.init(); Lists.init();
-    }
-</script>
-    <script>
-    // PWA Motorunu Çalıştır
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('PWA Hazır!', reg.scope))
-                .catch(err => console.log('PWA Hatası:', err));
-        });
     }
 </script>
 </body>
