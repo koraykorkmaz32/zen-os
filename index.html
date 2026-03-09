@@ -3,35 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zen OS | Aesthetic Terminal</title>
+    <title>Zen OS | Pro Terminal</title>
     <link rel="manifest" href="data:application/manifest+json,{'name':'ZenOS','short_name':'ZenOS','start_url':'.','display':'standalone','background_color':'#020617','theme_color':'#38bdf8'}">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
-    <style>
-        /* --- 1. TASARIM VE RENK PALETİ --- */
-        :root {
-            --bg: #020617; --panel: rgba(15, 23, 42, 0.85);
-            --accent: #38bdf8; --text: #f8fafc; --border: rgba(255, 255, 255, 0.1);
-        }
-        [data-theme="zen"] {
-            --bg: #fff5f8; --panel: rgba(255, 255, 255, 0.98);
-            --accent: #ff7eb9; --text: #2d3436; --border: rgba(255, 126, 185, 0.2);
-        }
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
+    <style>
+        /* --- TASARIM VE DEĞİŞKENLER --- */
+        :root { --bg: #020617; --panel: rgba(15, 23, 42, 0.85); --accent: #38bdf8; --text: #f8fafc; --border: rgba(255, 255, 255, 0.1); }
+        [data-theme="zen"] { --bg: #fff5f8; --panel: rgba(255, 255, 255, 0.98); --accent: #ff7eb9; --text: #2d3436; --border: rgba(255, 126, 185, 0.2); }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; min-height: 100vh; padding: 15px; user-select: none; }
+        .container { max-width: 1700px; margin: 0 auto; display: none; /* Veri yüklenene kadar gizli */ }
         
-        .container { max-width: 1700px; margin: 0 auto; }
-        
+        #loadingScreen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg); z-index: 9999; }
+        .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
         /* GRID MİMARİSİ */
         .grid-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
         .panel { background: var(--panel); backdrop-filter: blur(15px); border-radius: 28px; padding: 22px; border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
-
-        /* Üst Bar */
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 30px; background: var(--panel); border-radius: 24px; border: 1px solid var(--border); }
         .welcome-text { font-size: 1.2rem; font-weight: 700; }
 
@@ -50,7 +48,7 @@
         .cal-day.today { border: 2.5px solid var(--accent); color: var(--accent); font-weight: 800; }
         .day-indicators { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; margin-top: 4px; font-size: 1.1rem; }
 
-        /* --- HABIT TRACKER TASARIMI (BURASI EKSİKTİ) --- */
+        /* HABIT TRACKER TABLOSU */
         .habit-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .habit-table th { font-size: 0.7rem; color: var(--accent); padding: 10px; text-align: center; }
         .habit-table td { padding: 8px; border-bottom: 1px solid var(--border); text-align: center; }
@@ -65,14 +63,12 @@
         .item-list { list-style: none; overflow-y: auto; flex: 1; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-bottom: 6px; font-size: 0.85rem; }
 
-        /* MODAL */
+        /* MODAL VE YEMEK PLANI */
         .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .hidden { display: none !important; }
         .emoji-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .emoji-btn { font-size: 1.5rem; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
         .emoji-btn.active { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); }
-
-        /* YEMEK PLANI */
         .meal-table { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; width: 100%; }
         .meal-day { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px; border: 1px solid var(--border); }
         .meal-day h4 { font-size: 0.8rem; color: var(--accent); text-align: center; margin-bottom: 8px; }
@@ -91,17 +87,23 @@
 </head>
 <body oncontextmenu="return false;">
 
-<div class="container" id="captureArea">
+<div id="loadingScreen">
+    <div class="spinner"></div>
+    <div style="font-weight: 600; color: var(--accent); letter-spacing: 2px;">ZEN OS BAŞLATILIYOR...</div>
+</div>
+
+<div class="container" id="mainApp">
     <header class="top-bar">
         <div class="welcome-text">Hoş geldin, <span id="userNameDisp">Şef</span></div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn-primary" onclick="toggleTheme()"><i data-lucide="sun"></i></button>
-            <button class="btn-primary" onclick="toggleModal('settingsModal')"><i data-lucide="settings"></i></button>
-            <button class="btn-primary" onclick="exportPDF()"><i data-lucide="download"></i></button>
+            <button class="btn-primary" onclick="toggleTheme()" title="Tema"><i data-lucide="sun"></i></button>
+            <button class="btn-primary" onclick="exportPDF()" title="PDF İndir"><i data-lucide="download"></i></button>
+            <button class="btn-primary" onclick="toggleModal('settingsModal')" title="Ayarlar"><i data-lucide="settings"></i></button>
+            <button class="btn-primary" onclick="logOut()" title="Çıkış Yap" style="background: #ef4444; color: #fff;"><i data-lucide="log-out"></i></button>
         </div>
     </header>
 
-    <main class="grid-layout">
+    <main class="grid-layout" id="captureArea">
         <section class="panel" style="grid-column: span 1;">
             <h2><i data-lucide="quote"></i> Motivasyon</h2>
             <div style="flex:1; display:flex; align-items:center; justify-content:center; text-align:center;">
@@ -136,7 +138,7 @@
                 <h2><i data-lucide="calendar"></i> Planlayıcı</h2>
                 <div style="display:flex; align-items:center; gap:8px">
                     <button onclick="Cal.prev()" class="btn-secondary" style="padding:5px 10px"> < </button>
-                    <span id="calMonthTitle" style="font-weight:800; font-size:0.9rem">Mart 2026</span>
+                    <span id="calMonthTitle" style="font-weight:800; font-size:0.9rem"></span>
                     <button onclick="Cal.next()" class="btn-secondary" style="padding:5px 10px"> > </button>
                 </div>
             </div>
@@ -212,16 +214,88 @@
 
 <script>
     lucide.createIcons();
-    const DB = {
-        get: (k) => JSON.parse(localStorage.getItem(k)),
-        set: (k, v) => localStorage.setItem(k, JSON.stringify(v))
+
+    /* =========================================
+       1. FIREBASE BAĞLANTISI VE KORUMA
+       ========================================= */
+    const firebaseConfig = {
+        apiKey: "AIzaSyACMszR6WT9YHxgpKTQk9FJtWZzEj2SKZk",
+        authDomain: "productdashboard-12fd0.firebaseapp.com",
+        databaseURL: "https://productdashboard-12fd0-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "productdashboard-12fd0",
+        storageBucket: "productdashboard-12fd0.firebasestorage.app",
+        messagingSenderId: "273234191782",
+        appId: "1:273234191782:web:2d611bf016ed9ffdd4db67",
+        measurementId: "G-QHXLWNWYN6"
     };
 
-    // 1. TAKVİM
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.database();
+    let currentUid = null;
+
+    // DOMAIN KİLİDİ
+    const allowedDomains = ["localhost", "127.0.0.1", "koraykorkmaz32.github.io"];
+    if (!allowedDomains.includes(window.location.hostname) && window.location.hostname !== "") {
+        document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%'>Lisanssız Kullanım Engellendi.</h1>";
+    }
+
+    // AUTH GUARD (Giriş yapmayanı kov)
+    auth.onAuthStateChanged((user) => {
+        if (!user) {
+            window.location.href = "login.html"; // ÇELİK KAPI: GİRİŞ YAPMAYAN BURAYA DÜŞER
+        } else {
+            currentUid = user.uid;
+            
+            // İsmi Buluttan Çek
+            db.ref('users/' + user.uid + '/fullName').once('value').then(snap => {
+                if(snap.exists()) {
+                    document.getElementById('userNameDisp').innerText = snap.val();
+                    document.getElementById('userNameIn').value = snap.val();
+                }
+            });
+
+            // Verileri Buluttan İndir ve Sistemi Başlat
+            DB.syncFromCloud().then(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                startApp();
+            });
+        }
+    });
+
+    function logOut() {
+        auth.signOut().then(() => { window.location.href = "login.html"; });
+    }
+
+    /* =========================================
+       2. HİBRİT VERİTABANI (Local + Cloud)
+       ========================================= */
+    const DB = {
+        get: (k) => JSON.parse(localStorage.getItem(k)),
+        set: (k, v) => {
+            localStorage.setItem(k, JSON.stringify(v)); // UI anında güncellensin diye hızlı kayıt
+            if(currentUid) db.ref('users/' + currentUid + '/data/' + k).set(v); // Arka planda buluta gönder
+        },
+        syncFromCloud: async () => {
+            const snap = await db.ref('users/' + currentUid + '/data').once('value');
+            if(snap.exists()) {
+                const cloudData = snap.val();
+                for(let key in cloudData) {
+                    localStorage.setItem(key, JSON.stringify(cloudData[key]));
+                }
+            }
+        }
+    };
+
+    /* =========================================
+       3. MODÜLLER VE MANTIK
+       ========================================= */
+    
+    // TAKVİM
     const Cal = {
-        date: new Date(), selectedDate: null, emoji: '💖',
-        events: DB.get('zen_cal_v5') || {},
-        init() { this.render(); },
+        date: new Date(), selectedDate: null, emoji: '💖', events: {},
+        init() { this.events = DB.get('zen_cal_v5') || {}; this.render(); },
         render() {
             const grid = document.getElementById('calGrid'); grid.innerHTML = '';
             const y = this.date.getFullYear(), m = this.date.getMonth();
@@ -242,7 +316,7 @@
         },
         next() { this.date.setMonth(this.date.getMonth()+1); this.render(); },
         prev() { this.date.setMonth(this.date.getMonth()-1); this.render(); },
-        selEmoji(e) { this.emoji = e; },
+        selEmoji(e) { this.emoji = e; document.querySelectorAll('.emoji-btn').forEach(b => { b.classList.remove('active'); if(b.innerText===e) b.classList.add('active'); }); },
         addNote() {
             const val = document.getElementById('calNoteIn').value; if(!val) return;
             if(!this.events[this.selectedDate]) this.events[this.selectedDate] = [];
@@ -257,10 +331,11 @@
         delNote(id) { this.events[this.selectedDate] = this.events[this.selectedDate].filter(n => n.id !== id); DB.set('zen_cal_v5', this.events); this.renderNotes(); this.render(); }
     };
 
-    // 2. SU TAKİBİ
+    // SU TAKİBİ
     const Water = {
-        active: DB.get('zen_water_v5') || [],
+        active: [],
         init() {
+            this.active = DB.get('zen_water_v5') || [];
             if(localStorage.getItem('zen_water_date') !== new Date().toDateString()) { this.active = []; DB.set('zen_water_v5', []); }
             this.render();
         },
@@ -280,12 +355,15 @@
         }
     };
 
-    // 3. HABIT & MEAL (KUTUCUKLAR BURADA DÜZELTİLDİ)
+    // HABIT & YEMEK
     const Life = {
         days: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'],
-        meals: DB.get('zen_meals_v3') || {},
-        habits: DB.get('zen_habits_v3') || Array.from({length:10}, () => ({name:'', c:[]})),
-        init() { this.renderMeals(); this.renderHabits(); },
+        meals: {}, habits: [],
+        init() {
+            this.meals = DB.get('zen_meals_v3') || {};
+            this.habits = DB.get('zen_habits_v3') || Array.from({length:10}, () => ({name:'', c:[]}));
+            this.renderMeals(); this.renderHabits();
+        },
         renderMeals() {
             const grid = document.getElementById('mealGrid'); grid.innerHTML = '';
             const slots = ['Sabah','Ara 1','Öğle','Ara 2','Akşam'];
@@ -301,7 +379,7 @@
             const tbody = document.getElementById('habitGrid'); tbody.innerHTML = '';
             this.habits.forEach((h, r) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><input class="meal-input" style="text-align:left" value="${h.name}" onchange="Life.saveHabit(${r}, this.value)"></td>`;
+                tr.innerHTML = `<td><input class="meal-input" style="text-align:left" value="${h.name}" onchange="Life.saveHabitName(${r}, this.value)"></td>`;
                 for(let c=0; c<7; c++) {
                     const active = h.c.includes(c) ? 'checked' : '';
                     tr.innerHTML += `<td><div class="check-box ${active}" onclick="Life.toggleHabit(${r}, ${c})"></div></td>`;
@@ -309,16 +387,15 @@
                 tbody.appendChild(tr);
             });
         },
-        saveHabit(r, v) { this.habits[r].name = v; DB.set('zen_habits_v3', this.habits); },
+        saveHabitName(r, v) { this.habits[r].name = v; DB.set('zen_habits_v3', this.habits); },
         toggleHabit(r, c) {
             const h = this.habits[r];
             h.c.includes(c) ? h.c = h.c.filter(x=>x!==c) : h.c.push(c);
-            DB.set('zen_habits_v3', this.habits);
-            this.renderHabits(); // location.reload yerine tabloyu tazele
+            DB.set('zen_habits_v3', this.habits); this.renderHabits();
         }
     };
 
-    // 4. FOCUS & LİSTELER
+    // FOCUS
     const Focus = {
         timer: null, timeLeft: 25*60,
         init() { document.getElementById('timerCtrl').onclick = () => this.toggle(); },
@@ -332,8 +409,10 @@
         updateUI() { const m = Math.floor(this.timeLeft/60), s = this.timeLeft%60; document.getElementById('timerDisp').innerText = `${m}:${s.toString().padStart(2,'0')}`; }
     };
 
+    // LİSTELER
     const Lists = {
-        todo: DB.get('zen_todo_v4') || [], budget: DB.get('zen_budget_v4') || [],
+        todo: [], budget: [],
+        init() { this.todo = DB.get('zen_todo_v4') || []; this.budget = DB.get('zen_budget_v4') || []; this.render('todo'); this.render('budget'); },
         add(type) { const v = document.getElementById(type+'In').value; if(!v)return; this[type].push(v); DB.set('zen_'+type+'_v4', this[type]); document.getElementById(type+'In').value=''; this.render(type); },
         render(type) {
             const list = document.getElementById(type+'List'); let total = 0;
@@ -343,20 +422,36 @@
         del(type, i) { this[type].splice(i,1); DB.set('zen_'+type+'_v4', this[type]); this.render(type); }
     };
 
+    // YARDIMCI FONKSİYONLAR
     function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
     function toggleTheme() { const b = document.body; b.getAttribute('data-theme')==='zen' ? b.removeAttribute('data-theme') : b.setAttribute('data-theme','zen'); }
-    function saveProfile() { localStorage.setItem('zen_name', document.getElementById('userNameIn').value); location.reload(); }
-    async function exportPDF() {
-        const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'mm', 'a3');
-        html2canvas(document.getElementById('captureArea'), { scale: 1.5, backgroundColor: '#020617' }).then(canvas => { pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 420, 297); pdf.save('ZenOS_Dashboard.pdf'); });
+    
+    function saveProfile() { 
+        const newName = document.getElementById('userNameIn').value;
+        if(newName && currentUid) {
+            db.ref('users/' + currentUid + '/fullName').set(newName).then(() => {
+                document.getElementById('userNameDisp').innerText = newName;
+                toggleModal('settingsModal');
+            });
+        }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('userNameDisp').innerText = localStorage.getItem('zen_name') || 'Şef';
+    async function exportPDF() {
+        const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'mm', 'a3');
+        // Koyu tema PDF'te düzgün çıksın diye arka planı sabitliyoruz
+        const captureArea = document.getElementById('captureArea');
+        html2canvas(captureArea, { scale: 1.5, backgroundColor: '#020617' }).then(canvas => { 
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 420, 297); 
+            pdf.save('ZenOS_Dashboard.pdf'); 
+        });
+    }
+
+    // AUTH GUARD İZİN VERDİĞİNDE BURASI ÇALIŞIR
+    function startApp() {
         const q = ["Gülümse, bugün senin günün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Zihnin sakin, ruhun özgür olsun.", "Küçük adımlar, büyük hayaller."];
         document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
-        Cal.init(); Water.init(); Life.init(); Focus.init(); Lists.render('todo'); Lists.render('budget');
-    });
+        Cal.init(); Water.init(); Life.init(); Focus.init(); Lists.init();
+    }
 </script>
 </body>
 </html>
