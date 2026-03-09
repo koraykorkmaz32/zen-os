@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Zen OS | Pro Terminal</title>
+    <title>Zen OS | Global Pro</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -35,14 +35,12 @@
         .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 30px; background: var(--panel); border-radius: 24px; border: 1px solid var(--border); width: 100%; }
         .welcome-text { font-size: 1.2rem; font-weight: 700; }
 
-        /* SU TAKİBİ */
+        /* SU VE TAKVİM */
         .water-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; width: 100%; margin-top: 5px; }
         .glass { aspect-ratio: 1/1.5; border: 3px solid var(--accent); border-radius: 8px 8px 20px 20px; cursor: pointer; transition: 0.3s; background: rgba(56, 189, 248, 0.05); display: flex; align-items: center; justify-content: center; min-height: 60px; }
         .glass.active { background: var(--accent); box-shadow: 0 0 25px var(--accent); transform: scale(0.92); }
         .glass svg { width: 22px; height: 22px; color: var(--accent); }
         .glass.active svg { color: var(--bg); }
-
-        /* TAKVİM */
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .cal-day { aspect-ratio: 1/1; background: rgba(255,255,255,0.03); border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.9rem; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
@@ -50,15 +48,13 @@
         .cal-day.today { border: 2.5px solid var(--accent); color: var(--accent); font-weight: 800; }
         .day-indicators { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; margin-top: 4px; font-size: 1.1rem; }
 
-        /* HABIT TRACKER TABLOSU */
+        /* HABIT & ELEMANLAR */
         .habit-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         .habit-table th { font-size: 0.7rem; color: var(--accent); padding: 10px; text-align: center; }
         .habit-table td { padding: 8px; border-bottom: 1px solid var(--border); text-align: center; }
         .check-box { width: 24px; height: 24px; border: 2.5px solid var(--accent); border-radius: 7px; cursor: pointer; margin: 0 auto; transition: 0.2s; background: transparent; display: flex; align-items: center; justify-content: center; }
         .check-box.checked { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
         .check-box.checked::after { content: '✓'; color: #000; font-size: 14px; font-weight: 900; }
-
-        /* UI ELEMANLARI */
         .btn-primary { background: var(--accent); color: #000; border: none; padding: 12px 18px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
@@ -78,7 +74,6 @@
         .meal-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.7rem; padding: 6px; margin-bottom: 4px; border: none; outline: none; }
         .meal-label { font-size: 0.55rem; opacity: 0.4; display: block; margin-bottom: 2px; }
 
-        /* MOBİL STACK */
         @media (max-width: 1024px) {
             .grid-layout { grid-template-columns: 1fr; gap: 10px; }
             .panel { grid-column: span 1 !important; height: auto; padding: 15px; }
@@ -94,36 +89,36 @@
 
 <div id="loadingScreen">
     <div class="spinner"></div>
-    <div style="font-weight: 600; color: var(--accent); letter-spacing: 2px;">ZEN OS BAŞLATILIYOR...</div>
+    <div style="font-weight: 600; color: var(--accent); letter-spacing: 2px;" data-i18n="loading">ZEN OS BAŞLATILIYOR...</div>
 </div>
 
 <div class="container" id="mainApp">
     <header class="top-bar">
-        <div class="welcome-text">Hoş geldin, <span id="userNameDisp">Şef</span></div>
+        <div class="welcome-text"><span data-i18n="welcome">Hoş geldin</span>, <span id="userNameDisp">Şef</span></div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn-primary" onclick="toggleTheme()" title="Tema"><i data-lucide="sun"></i></button>
-            
-            <button class="btn-primary" onclick="toggleModal('settingsModal')" title="Ayarlar"><i data-lucide="settings"></i></button>
-            <button class="btn-primary" onclick="logOut()" title="Çıkış Yap" style="background: #ef4444; color: #fff;"><i data-lucide="log-out"></i></button>
+            <button class="btn-primary" onclick="toggleTheme()"><i data-lucide="sun"></i></button>
+            <button class="btn-primary" onclick="exportPDF()"><i data-lucide="download"></i></button>
+            <button class="btn-primary" onclick="toggleModal('settingsModal')"><i data-lucide="settings"></i></button>
+            <button class="btn-primary" onclick="logOut()" style="background: #ef4444; color: #fff;"><i data-lucide="log-out"></i></button>
         </div>
     </header>
 
     <main class="grid-layout" id="captureArea">
         <section class="panel" style="grid-column: span 1;">
-            <h2><i data-lucide="quote"></i> Motivasyon</h2>
+            <h2><i data-lucide="quote"></i> <span data-i18n="motivation">Motivasyon</span></h2>
             <div style="flex:1; display:flex; align-items:center; justify-content:center; text-align:center;">
                 <p id="quoteBox" style="font-style:italic; font-size: 1.1rem; font-weight: 300;"></p>
             </div>
         </section>
 
         <section class="panel" style="grid-column: span 1;">
-            <h2><i data-lucide="zap"></i> Deep Focus</h2>
+            <h2><i data-lucide="zap"></i> <span data-i18n="focus">Deep Focus</span></h2>
             <div style="text-align: center; flex:1; display:flex; flex-direction:column; justify-content:center;">
                 <div id="timerDisp" style="font-size: 3.2rem; font-weight: 800; margin-bottom: 10px;">25:00</div>
                 <div style="display: flex; gap: 5px; flex-direction: column;">
                     <input type="number" id="timerMin" value="25" class="input-field" style="text-align:center">
                     <div style="display: flex; gap: 5px;">
-                        <button class="btn-primary" id="timerCtrl" style="flex:2">Başlat</button>
+                        <button class="btn-primary" id="timerCtrl" style="flex:2" data-i18n="start">Başlat</button>
                         <button class="btn-secondary" onclick="Focus.reset()" style="flex:1"><i data-lucide="rotate-ccw" style="width:16px"></i></button>
                     </div>
                 </div>
@@ -132,7 +127,7 @@
 
         <section class="panel" style="grid-column: span 2;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2><i data-lucide="droplet"></i> Su Takibi</h2>
+                <h2><i data-lucide="droplet"></i> <span data-i18n="water">Su Takibi</span></h2>
                 <span id="waterText" style="font-size: 1.5rem; font-weight: 800; color: var(--accent);">0 / 2000 ml</span>
             </div>
             <div class="water-grid" id="waterGrid"></div>
@@ -140,7 +135,7 @@
 
         <section class="panel" style="grid-column: span 2;">
             <div class="cal-nav">
-                <h2><i data-lucide="calendar"></i> Planlayıcı</h2>
+                <h2><i data-lucide="calendar"></i> <span data-i18n="planner">Planlayıcı</span></h2>
                 <div style="display:flex; align-items:center; gap:8px">
                     <button onclick="Cal.prev()" class="btn-secondary" style="padding:5px 10px"> < </button>
                     <span id="calMonthTitle" style="font-weight:800; font-size:0.9rem"></span>
@@ -151,36 +146,38 @@
         </section>
 
         <section class="panel">
-            <h2><i data-lucide="check-square"></i> To-Do List</h2>
+            <h2><i data-lucide="check-square"></i> <span data-i18n="todo">To-Do List</span></h2>
             <div style="display:flex; gap:8px; margin-bottom:12px">
-                <input id="todoIn" class="input-field" placeholder="Ekle...">
-                <button class="btn-primary" onclick="Lists.add('todo')">+</button>
+                <input id="todoIn" class="input-field" data-i18n-placeholder="todoPlace" placeholder="Ekle...">
+                <button class="btn-primary" onclick="Lists.add('todo')" data-i18n="add">Ekle</button>
             </div>
             <ul id="todoList" class="item-list"></ul>
         </section>
 
         <section class="panel">
-            <h2><i data-lucide="wallet"></i> Bütçe Takibi</h2>
+            <h2><i data-lucide="wallet"></i> <span data-i18n="budget">Bütçe Takibi</span></h2>
             <div style="display:flex; gap:8px; margin-bottom:12px">
-                <input id="budgetIn" class="input-field" placeholder="Gider: 500">
-                <button class="btn-primary" onclick="Lists.add('budget')">+</button>
+                <input id="budgetIn" class="input-field" data-i18n-placeholder="budgetPlace" placeholder="Gider: 500">
+                <button class="btn-primary" onclick="Lists.add('budget')" data-i18n="add">Ekle</button>
             </div>
-            <div style="text-align:right; font-weight:800; color:var(--accent); font-size:1.1rem; margin-bottom:8px">Toplam: <span id="budgetTotal">0</span> TL</div>
+            <div style="text-align:right; font-weight:800; color:var(--accent); font-size:1.1rem; margin-bottom:8px">
+                <span data-i18n="total">Toplam</span>: <span id="budgetTotal">0</span>
+            </div>
             <ul id="budgetList" class="item-list"></ul>
         </section>
 
         <section class="panel" style="grid-column: span 4;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <h2 style="margin: 0;"><i data-lucide="utensils"></i> Haftalık Yemek Planı</h2>
+                <h2 style="margin: 0;"><i data-lucide="utensils"></i> <span data-i18n="mealPlan">Haftalık Yemek Planı</span></h2>
                 <button class="btn-secondary" onclick="exportMealPDF()" style="padding: 6px 12px; font-size: 0.75rem; color: var(--accent); border-color: var(--accent);">
-                    <i data-lucide="printer" style="width:14px; height:14px;"></i> Çıktı Al
+                    <i data-lucide="printer" style="width:14px; height:14px;"></i> <span data-i18n="print">Çıktı Al</span>
                 </button>
             </div>
             <div class="meal-table" id="mealGrid"></div>
         </section>
 
         <section class="panel" style="grid-column: span 4;">
-            <h2><i data-lucide="activity"></i> Alışkanlık Takibi (Haftalık - 10 Satır)</h2>
+            <h2><i data-lucide="activity"></i> <span data-i18n="habitTrack">Alışkanlık Takibi</span></h2>
             <div style="overflow-x: auto; width: 100%;">
                 <table class="habit-table">
                     <thead id="habitHead"></thead>
@@ -193,19 +190,29 @@
 
 <div id="printMealTemplate" style="position: absolute; top: -9999px; left: -9999px; width: 1122px; height: 793px; background: #fffafb; padding: 40px; font-family: 'Plus Jakarta Sans', sans-serif; box-sizing: border-box;">
     <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px dashed #ffb6c1; padding-bottom: 15px;">
-        <h1 style="color: #ff7eb9; font-size: 34px; margin-bottom: 5px; font-weight: 800; letter-spacing: 1px;">✨ Haftalık Gurme Yemek Planı ✨</h1>
-        <p style="color: #636e72; font-size: 16px; font-weight: 600; letter-spacing: 2px;">ZEN OS LIFESTYLE <span style="opacity: 0.4; margin: 0 10px;">|</span> AİLE MENÜSÜ</p>
+        <h1 id="pdfTitle" style="color: #ff7eb9; font-size: 34px; margin-bottom: 5px; font-weight: 800; letter-spacing: 1px;">✨ Haftalık Gurme Yemek Planı ✨</h1>
+        <p style="color: #636e72; font-size: 16px; font-weight: 600; letter-spacing: 2px;">ZEN OS LIFESTYLE <span style="opacity: 0.4; margin: 0 10px;">|</span> <span id="pdfSub">AİLE MENÜSÜ</span></p>
     </div>
-    <div id="printMealGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; height: calc(100% - 100px);">
-        </div>
+    <div id="printMealGrid" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 15px; height: calc(100% - 100px);"></div>
 </div>
 
 <div id="settingsModal" class="modal hidden">
     <div class="panel" style="width: 350px;">
-        <h2>Ayarlar</h2>
-        <input id="userNameIn" class="input-field" placeholder="İsminiz...">
-        <button class="btn-primary" onclick="saveProfile()" style="width:100%; margin-top:12px">Kaydet</button>
-        <button class="btn-secondary" onclick="toggleModal('settingsModal')" style="width:100%; margin-top:8px">Kapat</button>
+        <h2><i data-lucide="settings"></i> <span data-i18n="settings">Ayarlar</span></h2>
+        
+        <label style="font-size: 0.7rem; opacity: 0.6; margin-bottom: 5px; display: block;" data-i18n="langLabel">Sistem Dili</label>
+        <select id="langSelect" class="input-field" onchange="changeLanguage(this.value)" style="margin-bottom: 15px; cursor: pointer;">
+            <option value="tr">🇹🇷 Türkçe</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="fr">🇫🇷 Français</option>
+        </select>
+
+        <label style="font-size: 0.7rem; opacity: 0.6; margin-bottom: 5px; display: block;" data-i18n="nameLabel">İsim</label>
+        <input id="userNameIn" class="input-field" data-i18n-placeholder="namePlace" placeholder="İsminiz...">
+        
+        <button class="btn-primary" onclick="saveProfile()" style="width:100%; margin-top:15px" data-i18n="save">Kaydet</button>
+        <button class="btn-secondary" onclick="toggleModal('settingsModal')" style="width:100%; margin-top:8px" data-i18n="close">Kapat</button>
     </div>
 </div>
 
@@ -223,23 +230,95 @@
             <button class="emoji-btn" onclick="Cal.selEmoji('✨')">✨</button>
         </div>
         <div style="display:flex; gap:8px; margin-bottom:15px">
-            <input id="calNoteIn" class="input-field" placeholder="Notunuz...">
-            <button class="btn-primary" onclick="Cal.addNote()">Ekle</button>
+            <input id="calNoteIn" class="input-field" data-i18n-placeholder="notePlace" placeholder="Notunuz...">
+            <button class="btn-primary" onclick="Cal.addNote()" data-i18n="add">Ekle</button>
         </div>
         <ul id="calNoteList" class="item-list"></ul>
-        <button class="btn-secondary" onclick="toggleModal('calModal')" style="width:100%; margin-top:10px">Kapat</button>
+        <button class="btn-secondary" onclick="toggleModal('calModal')" style="width:100%; margin-top:10px" data-i18n="close">Kapat</button>
     </div>
 </div>
 
 <script>
-    // PWA Motorunu Çalıştır
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA Hatası:', err));
-        });
+    if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(err => console.log('PWA Hatası:', err)); }); }
+    lucide.createIcons();
+
+    /* =========================================
+       0. ÇEVİRİ MOTORU (i18n)
+       ========================================= */
+    const dict = {
+        tr: {
+            loading: "ZEN OS BAŞLATILIYOR...", welcome: "Hoş geldin", motivation: "Motivasyon", focus: "Deep Focus",
+            water: "Su Takibi", planner: "Planlayıcı", todo: "To-Do List", budget: "Bütçe Takibi", mealPlan: "Haftalık Yemek Planı",
+            habitTrack: "Alışkanlık Takibi", start: "Başlat", stop: "Durdur", add: "Ekle", total: "Toplam", print: "Çıktı Al",
+            settings: "Ayarlar", langLabel: "Sistem Dili", nameLabel: "İsim", save: "Kaydet", close: "Kapat",
+            todoPlace: "Ne yapıyoruz?", budgetPlace: "Gider: 500", namePlace: "İsminiz...", notePlace: "Planınız nedir?",
+            focusAlert: "Focus Bitti! ✨", printTitle: "✨ Haftalık Gurme Yemek Planı ✨", printSub: "AİLE MENÜSÜ", habitHead: "Alışkanlık",
+            daysShort: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'], daysLong: ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'],
+            meals: ['Sabah','Ara 1','Öğle','Ara 2','Akşam'], quotes: ["Gülümse Şef, bugün harika bir gün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Küçük adımlar, büyük hayaller."]
+        },
+        en: {
+            loading: "ZEN OS STARTING...", welcome: "Welcome", motivation: "Motivation", focus: "Deep Focus",
+            water: "Water Tracker", planner: "Planner", todo: "To-Do List", budget: "Budget Tracker", mealPlan: "Weekly Meal Plan",
+            habitTrack: "Habit Tracker", start: "Start", stop: "Stop", add: "Add", total: "Total", print: "Print PDF",
+            settings: "Settings", langLabel: "System Language", nameLabel: "Name", save: "Save", close: "Close",
+            todoPlace: "What's next?", budgetPlace: "Expense: 50", namePlace: "Your Name...", notePlace: "Your plan?",
+            focusAlert: "Focus Completed! ✨", printTitle: "✨ Weekly Gourmet Meal Plan ✨", printSub: "FAMILY MENU", habitHead: "Habit",
+            daysShort: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], daysLong: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
+            meals: ['Breakfast','Snack 1','Lunch','Snack 2','Dinner'], quotes: ["Smile, today is a great day. 🌸", "What you focus on grows. ✨", "Small steps, big dreams."]
+        },
+        de: {
+            loading: "ZEN OS STARTET...", welcome: "Willkommen", motivation: "Motivation", focus: "Tiefer Fokus",
+            water: "Wassertracker", planner: "Planer", todo: "To-Do Liste", budget: "Budget-Tracker", mealPlan: "Wöchentlicher Speiseplan",
+            habitTrack: "Gewohnheitstracker", start: "Starten", stop: "Stopp", add: "Hinzufügen", total: "Gesamt", print: "Drucken",
+            settings: "Einstellungen", langLabel: "Systemsprache", nameLabel: "Name", save: "Speichern", close: "Schließen",
+            todoPlace: "Was steht an?", budgetPlace: "Ausgabe: 50", namePlace: "Dein Name...", notePlace: "Dein Plan?",
+            focusAlert: "Fokus Beendet! ✨", printTitle: "✨ Wöchentlicher Gourmet-Speiseplan ✨", printSub: "FAMILIENMENÜ", habitHead: "Gewohnheit",
+            daysShort: ['Mo','Di','Mi','Do','Fr','Sa','So'], daysLong: ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'],
+            meals: ['Frühstück','Snack 1','Mittagessen','Snack 2','Abendessen'], quotes: ["Lächle, heute ist ein toller Tag. 🌸", "Worauf du dich fokussierst, wächst. ✨", "Kleine Schritte, große Träume."]
+        },
+        fr: {
+            loading: "ZEN OS DÉMARRE...", welcome: "Bienvenue", motivation: "Motivation", focus: "Concentration Profonde",
+            water: "Suivi d'Eau", planner: "Planificateur", todo: "Liste de Tâches", budget: "Suivi du Budget", mealPlan: "Plan de Repas Hebdomadaire",
+            habitTrack: "Suivi des Habitudes", start: "Démarrer", stop: "Arrêter", add: "Ajouter", total: "Total", print: "Imprimer",
+            settings: "Paramètres", langLabel: "Langue du Système", nameLabel: "Nom", save: "Enregistrer", close: "Fermer",
+            todoPlace: "Que faire?", budgetPlace: "Dépense: 50", namePlace: "Votre Nom...", notePlace: "Votre plan?",
+            focusAlert: "Concentration Terminée! ✨", printTitle: "✨ Plan de Repas Gourmet Hebdomadaire ✨", printSub: "MENU FAMILIAL", habitHead: "Habitude",
+            daysShort: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'], daysLong: ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'],
+            meals: ['Petit-déjeuner','Collation 1','Déjeuner','Collation 2','Dîner'], quotes: ["Souriez, c'est une belle journée. 🌸", "Ce sur quoi vous vous concentrez grandit. ✨", "Petits pas, grands rêves."]
+        }
+    };
+
+    let currentLang = localStorage.getItem('zen_lang') || 'tr';
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('zen_lang', lang);
+        applyTranslations();
+        // Arayüzleri yeni dille tekrar çiz
+        Life.renderMeals(); 
+        Life.renderHabits();
+        Cal.render();
+        // Rastgele yeni bir motivasyon sözü seç
+        const q = dict[currentLang].quotes;
+        document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
     }
 
-    lucide.createIcons();
+    function applyTranslations() {
+        const t = dict[currentLang];
+        document.getElementById('langSelect').value = currentLang;
+        
+        // Metinleri Değiştir
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(t[key]) el.innerText = t[key];
+        });
+        
+        // İpucu (Placeholder) Metinlerini Değiştir
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if(t[key]) el.setAttribute('placeholder', t[key]);
+        });
+    }
 
     /* =========================================
        1. FIREBASE BAĞLANTISI VE KORUMA
@@ -259,13 +338,11 @@
     const db = firebase.database();
     let currentUid = null;
 
-    // DOMAIN KİLİDİ
     const allowedDomains = ["localhost", "127.0.0.1", "koraykorkmaz32.github.io"];
     if (!allowedDomains.includes(window.location.hostname) && window.location.hostname !== "") {
         document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%'>Lisanssız Kullanım Engellendi.</h1>";
     }
 
-    // AUTH GUARD
     auth.onAuthStateChanged((user) => {
         if (!user) {
             window.location.href = "login.html";
@@ -317,7 +394,11 @@
         render() {
             const grid = document.getElementById('calGrid'); grid.innerHTML = '';
             const y = this.date.getFullYear(), m = this.date.getMonth();
-            document.getElementById('calMonthTitle').innerText = new Intl.DateTimeFormat('tr-TR', {month:'long', year:'numeric'}).format(this.date);
+            
+            // Ay ismini dinamik dile göre yazdır
+            const langCode = currentLang === 'en' ? 'en-US' : currentLang === 'de' ? 'de-DE' : currentLang === 'fr' ? 'fr-FR' : 'tr-TR';
+            document.getElementById('calMonthTitle').innerText = new Intl.DateTimeFormat(langCode, {month:'long', year:'numeric'}).format(this.date);
+            
             const daysInMonth = new Date(y, m+1, 0).getDate();
             for(let i=1; i<=daysInMonth; i++) {
                 const key = `${y}-${m+1}-${i}`;
@@ -372,7 +453,6 @@
     };
 
     const Life = {
-        days: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'],
         meals: {}, habits: [],
         init() {
             this.meals = DB.get('zen_meals_v3') || {};
@@ -381,16 +461,23 @@
         },
         renderMeals() {
             const grid = document.getElementById('mealGrid'); grid.innerHTML = '';
-            const slots = ['Sabah','Ara 1','Öğle','Ara 2','Akşam'];
-            this.days.forEach(d => {
-                let h = `<div class="meal-day"><h4>${d}</h4>`;
-                slots.forEach((s, i) => h += `<span class="meal-label">${s}</span><input class="meal-input" value="${this.meals[d+i]||''}" onchange="Life.saveMeal('${d+i}', this.value)">`);
+            const t = dict[currentLang];
+            const dbKeys = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz']; // Veritabanı anahtarları sabit kalmalı
+            
+            t.daysShort.forEach((displayDay, dayIndex) => {
+                const dbKeyDay = dbKeys[dayIndex];
+                let h = `<div class="meal-day"><h4>${displayDay}</h4>`;
+                t.meals.forEach((displayMeal, mealIndex) => {
+                    const dbKey = dbKeyDay + mealIndex;
+                    h += `<span class="meal-label">${displayMeal}</span><input class="meal-input" value="${this.meals[dbKey]||''}" onchange="Life.saveMeal('${dbKey}', this.value)">`;
+                });
                 grid.innerHTML += h + `</div>`;
             });
         },
         saveMeal(k, v) { this.meals[k] = v; DB.set('zen_meals_v3', this.meals); },
         renderHabits() {
-            document.getElementById('habitHead').innerHTML = `<tr><th>Alışkanlık</th>${this.days.map(d=>`<th>${d}</th>`).join('')}</tr>`;
+            const t = dict[currentLang];
+            document.getElementById('habitHead').innerHTML = `<tr><th>${t.habitHead}</th>${t.daysShort.map(d=>`<th>${d}</th>`).join('')}</tr>`;
             const tbody = document.getElementById('habitGrid'); tbody.innerHTML = '';
             this.habits.forEach((h, r) => {
                 const tr = document.createElement('tr');
@@ -415,10 +502,14 @@
         init() { document.getElementById('timerCtrl').onclick = () => this.toggle(); },
         toggle() { this.timer ? this.stop() : this.start(); },
         start() {
-            this.timeLeft = document.getElementById('timerMin').value * 60; document.getElementById('timerCtrl').innerText = 'Durdur';
-            this.timer = setInterval(() => { this.timeLeft--; this.updateUI(); if(this.timeLeft<=0){ this.stop(); alert('Focus Bitti! ✨'); } }, 1000);
+            this.timeLeft = document.getElementById('timerMin').value * 60; 
+            document.getElementById('timerCtrl').innerText = dict[currentLang].stop;
+            this.timer = setInterval(() => { 
+                this.timeLeft--; this.updateUI(); 
+                if(this.timeLeft<=0){ this.stop(); alert(dict[currentLang].focusAlert); } 
+            }, 1000);
         },
-        stop() { clearInterval(this.timer); this.timer = null; document.getElementById('timerCtrl').innerText = 'Başlat'; },
+        stop() { clearInterval(this.timer); this.timer = null; document.getElementById('timerCtrl').innerText = dict[currentLang].start; },
         reset() { this.stop(); this.timeLeft = document.getElementById('timerMin').value * 60; this.updateUI(); },
         updateUI() { const m = Math.floor(this.timeLeft/60), s = this.timeLeft%60; document.getElementById('timerDisp').innerText = `${m}:${s.toString().padStart(2,'0')}`; }
     };
@@ -442,34 +533,34 @@
         if(newName && currentUid) { db.ref('users/' + currentUid + '/fullName').set(newName).then(() => { document.getElementById('userNameDisp').innerText = newName; toggleModal('settingsModal'); }); }
     }
 
-    /* --- PDF DIŞA AKTARIM FONKSİYONLARI --- */
-    
-    // 1. TÜM PANELİ İNDİR (Üstteki İkon)
+    /* --- PDF DIŞA AKTARIM --- */
     async function exportPDF() {
         const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'mm', 'a3');
-        html2canvas(document.getElementById('captureArea'), { scale: 1.5, backgroundColor: '#020617' }).then(canvas => { 
-            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 420, 297); 
-            pdf.save('ZenOS_Dashboard.pdf'); 
+        const captureArea = document.getElementById('captureArea');
+        html2canvas(captureArea, { scale: 1.5, backgroundColor: '#020617' }).then(canvas => { 
+            pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 420, 297); pdf.save('ZenOS_Dashboard.pdf'); 
         });
     }
 
-    // 2. YEMEK PLANINI ÖZEL ŞABLONLA İNDİR (Yakışıklı & Feminen)
     async function exportMealPDF() {
+        const t = dict[currentLang];
+        document.getElementById('pdfTitle').innerText = t.printTitle;
+        document.getElementById('pdfSub').innerText = t.printSub;
+
         const printGrid = document.getElementById('printMealGrid');
         printGrid.innerHTML = '';
-        const days = ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'];
-        const slots = ['Sabah','Ara Öğün 1','Öğle','Ara Öğün 2','Akşam'];
         const meals = DB.get('zen_meals_v3') || {};
-        const keyDays = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz']; // Veritabanı anahtarları
+        const dbKeys = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz']; // Veritabanından çekerken anahtarlar sabit
 
-        days.forEach((d, index) => {
-            const dbKeyDay = keyDays[index];
+        t.daysLong.forEach((displayDay, index) => {
+            const dbKeyDay = dbKeys[index];
             let col = `<div style="background: #ffffff; border: 1px solid #ffe3e8; border-radius: 15px; padding: 15px; box-shadow: 0 4px 15px rgba(255,126,185,0.05);">`;
-            col += `<h3 style="text-align: center; color: #ff7eb9; margin-bottom: 15px; font-size: 18px; border-bottom: 1px solid #ffe3e8; padding-bottom: 10px;">${d}</h3>`;
-            slots.forEach((s, i) => {
+            col += `<h3 style="text-align: center; color: #ff7eb9; margin-bottom: 15px; font-size: 18px; border-bottom: 1px solid #ffe3e8; padding-bottom: 10px;">${displayDay}</h3>`;
+            
+            t.meals.forEach((displayMeal, i) => {
                 const val = meals[dbKeyDay+i] || '-';
                 col += `<div style="margin-bottom: 15px;">`;
-                col += `<span style="display: block; font-size: 11px; color: #b2bec3; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px;">${s}</span>`;
+                col += `<span style="display: block; font-size: 11px; color: #b2bec3; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px;">${displayMeal}</span>`;
                 col += `<div style="font-size: 13px; font-weight: 600; color: #2d3436; min-height: 25px; border-bottom: 1px dashed #dfe6e9; padding-bottom: 3px;">${val}</div>`;
                 col += `</div>`;
             });
@@ -477,27 +568,19 @@
             printGrid.innerHTML += col;
         });
 
-        // O gizli tabloyu geçici olarak render etmek için yukarı alıyoruz
         const target = document.getElementById('printMealTemplate');
-        target.style.top = '0';
-        target.style.left = '0';
-        target.style.zIndex = '-1';
-
-        const { jsPDF } = window.jspdf; 
-        const pdf = new jsPDF('l', 'px', [1122, 793]); // A4 boyutuna uygun piksel ayarı
-
+        target.style.top = '0'; target.style.left = '0'; target.style.zIndex = '-1';
+        const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'px', [1122, 793]);
         html2canvas(target, { scale: 2, backgroundColor: '#fffafb' }).then(canvas => { 
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 1122, 793); 
-            pdf.save('ZenOS_Yemek_Plani.pdf'); 
-            
-            // İşlem bitince şablonu tekrar gizle
-            target.style.top = '-9999px';
-            target.style.left = '-9999px';
+            pdf.save(`ZenOS_MealPlan_${currentLang.toUpperCase()}.pdf`); 
+            target.style.top = '-9999px'; target.style.left = '-9999px';
         });
     }
 
     function startApp() {
-        const q = ["Gülümse Koray Şef, bugün harika bir gün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Zihnin sakin, ruhun özgür olsun.", "Küçük adımlar, büyük hayaller."];
+        applyTranslations();
+        const q = dict[currentLang].quotes;
         document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
         Cal.init(); Water.init(); Life.init(); Focus.init(); Lists.init();
     }
