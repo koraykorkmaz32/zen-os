@@ -234,11 +234,12 @@
     }
 
     // KAYIT OL
+    // KAYIT OL (DİNAMİK LİSANS SİSTEMİ)
     function handleRegister() {
         const name = document.getElementById('regName').value.trim();
         const email = document.getElementById('regEmail').value.trim();
         const pass = document.getElementById('regPassword').value;
-        const code = document.getElementById('regCode').value.trim();
+        const code = document.getElementById('regCode').value.trim().toUpperCase(); // Harfleri otomatik büyüt
         const terms = document.getElementById('termsCheck').checked;
         const btn = document.getElementById('regBtn');
 
@@ -246,35 +247,52 @@
         if(pass.length < 6) { alert("Şifre en az 6 haneli olmalıdır."); return; }
         if(!terms) { alert("Kayıt olmak için kullanım şartlarını kabul etmelisiniz."); return; }
 
-        // MASTER LİSANS KODU (BURAYI DEĞİŞTİREBİLİRSİN)
-        const MASTER_CODE = "ZEN-PRO-2026";
-        if(code !== MASTER_CODE) { alert("Geçersiz satın alma kodu! Lütfen lisansınızı kontrol edin."); return; }
+        btn.disabled = true; btn.innerText = "Lisans Kontrol Ediliyor...";
 
-        btn.disabled = true; btn.innerText = "Kayıt Yapılıyor...";
-
-        auth.createUserWithEmailAndPassword(email, pass)
-            .then((userCredential) => {
-                const user = userCredential.user;
-                // Kullanıcıyı veritabanına kaydet
-                return db.ref('users/' + user.uid).set({
-                    fullName: name,
-                    email: email,
-                    licenseCode: code,
-                    createdAt: firebase.database.ServerValue.TIMESTAMP
-                });
-            })
-            .then(() => {
-                // İsmini tarayıcıya kaydet ki arayüzde "Hoş geldin Koray" yazsın
-                localStorage.setItem('zen_name', name);
-                alert("Kayıt başarılı! Sisteme giriş yapıyorsunuz...");
-                window.location.href = "index.html";
-            })
-            .catch((error) => {
+        // 1. AŞAMA: LİSANS KODUNU BULUTTA DOĞRULA
+        db.ref('license_keys/' + code).once('value').then(snap => {
+            if (!snap.exists() || snap.val().status !== 'active') {
+                alert("Geçersiz veya daha önce kullanılmış bir lisans kodu girdiniz!");
                 btn.disabled = false; btn.innerText = "Üye Ol";
-                let msg = error.message;
-                if(error.code === 'auth/email-already-in-use') msg = "Bu e-posta adresi zaten kullanımda.";
-                alert(msg);
-            });
+                return;
+            }
+
+            // 2. AŞAMA: KOD GEÇERLİYSE KULLANICIYI OLUŞTUR
+            btn.innerText = "Hesap Oluşturuluyor...";
+            auth.createUserWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // Kodu "Kullanıldı" (used) olarak yak ve kimin kullandığını yaz
+                    db.ref('license_keys/' + code).update({
+                        status: 'used',
+                        usedBy: user.uid,
+                        usedAt: firebase.database.ServerValue.TIMESTAMP
+                    });
+
+                    // Kullanıcı veritabanını oluştur
+                    return db.ref('users/' + user.uid).set({
+                        fullName: name,
+                        email: email,
+                        licenseCode: code,
+                        createdAt: firebase.database.ServerValue.TIMESTAMP
+                    });
+                })
+                .then(() => {
+                    localStorage.setItem('zen_name', name);
+                    alert("Kayıt başarılı! Lisansınız onaylandı.");
+                    window.location.href = "index.html";
+                })
+                .catch((error) => {
+                    btn.disabled = false; btn.innerText = "Üye Ol";
+                    let msg = error.message;
+                    if(error.code === 'auth/email-already-in-use') msg = "Bu e-posta adresi zaten kullanımda.";
+                    alert(msg);
+                });
+        }).catch(err => {
+            alert("Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.");
+            btn.disabled = false; btn.innerText = "Üye Ol";
+        });
     }
 
     // ŞİFRE SIFIRLAMA
