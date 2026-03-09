@@ -265,7 +265,18 @@
     });
 
     function logOut() {
-        auth.signOut().then(() => { window.location.href = "login.html"; });
+        // 1. Çıkış yapmadan önce tarayıcı hafızasındaki TÜM Zen OS verilerini temizle
+        for (let key in localStorage) {
+            if (key.startsWith('zen_') && key !== 'zen_theme') { 
+                // Temayı silmiyoruz ki siyah/beyaz tercihi kalsın
+                localStorage.removeItem(key);
+            }
+        }
+        
+        // 2. Firebase'den çıkış yap ve login ekranına fırlat
+        auth.signOut().then(() => { 
+            window.location.href = "login.html"; 
+        });
     }
 
     /* =========================================
