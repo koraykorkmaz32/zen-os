@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Zen OS | Pro Terminal</title>
-    <link rel="manifest" href="data:application/manifest+json,{'name':'ZenOS','short_name':'ZenOS','start_url':'.','display':'standalone','background_color':'#020617','theme_color':'#38bdf8'}">
+    <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -463,6 +463,16 @@
         const q = ["Gülümse, bugün senin günün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Zihnin sakin, ruhun özgür olsun.", "Küçük adımlar, büyük hayaller."];
         document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
         Cal.init(); Water.init(); Life.init(); Focus.init(); Lists.init();
+    }
+</script>
+    <script>
+    // PWA Motorunu Çalıştır
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('PWA Hazır!', reg.scope))
+                .catch(err => console.log('PWA Hatası:', err));
+        });
     }
 </script>
 </body>
