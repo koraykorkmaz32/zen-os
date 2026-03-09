@@ -15,13 +15,35 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
-        /* --- TASARIM VE DEĞİŞKENLER --- */
-        :root { --bg: #020617; --panel: rgba(15, 23, 42, 0.85); --accent: #38bdf8; --text: #f8fafc; --border: rgba(255, 255, 255, 0.1); }
-        [data-theme="zen"] { --bg: #fff5f8; --panel: rgba(255, 255, 255, 0.98); --accent: #ff7eb9; --text: #2d3436; --border: rgba(255, 126, 185, 0.2); }
+        /* --- 4 PREMIUM TASARIM PAKETİ --- */
+        
+        /* 1. Midnight Onyx (Varsayılan Koyu) */
+        :root, [data-theme="onyx"] { 
+            --bg: #020617; --panel: rgba(15, 23, 42, 0.85); 
+            --accent: #38bdf8; --text: #f8fafc; --border: rgba(255, 255, 255, 0.1); 
+        }
+        
+        /* 2. Lotus Quartz (Aydınlık / Pembe) */
+        [data-theme="lotus"] { 
+            --bg: #fff5f8; --panel: rgba(255, 255, 255, 0.98); 
+            --accent: #ff7eb9; --text: #2d3436; --border: rgba(255, 126, 185, 0.2); 
+        }
+
+        /* 3. Solar Amber (Koyu / Altın-Kehribar) */
+        [data-theme="amber"] { 
+            --bg: #1c1917; --panel: rgba(41, 37, 36, 0.85); 
+            --accent: #f59e0b; --text: #fafaf9; --border: rgba(245, 158, 11, 0.15); 
+        }
+
+        /* 4. Aurora Emerald (Koyu / Zümrüt Yeşili) */
+        [data-theme="emerald"] { 
+            --bg: #064e3b; --panel: rgba(2, 44, 34, 0.85); 
+            --accent: #34d399; --text: #ecfdf5; --border: rgba(52, 211, 153, 0.15); 
+        }
         
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { overflow-x: hidden; width: 100%; max-width: 100vw; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: 0.4s; min-height: 100vh; padding: 15px; user-select: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); transition: background-color 0.5s ease, color 0.5s ease; min-height: 100vh; padding: 15px; user-select: none; }
         .container { max-width: 1700px; margin: 0 auto; display: none; width: 100%; }
         
         #loadingScreen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg); z-index: 9999; }
@@ -30,16 +52,16 @@
 
         /* GRID MİMARİSİ */
         .grid-layout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; width: 100%; }
-        .panel { background: var(--panel); backdrop-filter: blur(15px); border-radius: 28px; padding: 22px; border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 100%; }
-        h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 30px; background: var(--panel); border-radius: 24px; border: 1px solid var(--border); width: 100%; }
+        .panel { background: var(--panel); backdrop-filter: blur(15px); border-radius: 28px; padding: 22px; border: 1px solid var(--border); height: 100%; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 100%; transition: 0.3s; }
+        h2 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-weight: 700; transition: 0.3s; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 15px 30px; background: var(--panel); border-radius: 24px; border: 1px solid var(--border); width: 100%; transition: 0.3s; }
         .welcome-text { font-size: 1.2rem; font-weight: 700; }
 
         /* SU VE TAKVİM */
         .water-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 10px; width: 100%; margin-top: 5px; }
-        .glass { aspect-ratio: 1/1.5; border: 3px solid var(--accent); border-radius: 8px 8px 20px 20px; cursor: pointer; transition: 0.3s; background: rgba(56, 189, 248, 0.05); display: flex; align-items: center; justify-content: center; min-height: 60px; }
+        .glass { aspect-ratio: 1/1.5; border: 3px solid var(--accent); border-radius: 8px 8px 20px 20px; cursor: pointer; transition: 0.3s; background: rgba(var(--accent), 0.05); display: flex; align-items: center; justify-content: center; min-height: 60px; }
         .glass.active { background: var(--accent); box-shadow: 0 0 25px var(--accent); transform: scale(0.92); }
-        .glass svg { width: 22px; height: 22px; color: var(--accent); }
+        .glass svg { width: 22px; height: 22px; color: var(--accent); transition: 0.3s; }
         .glass.active svg { color: var(--bg); }
         .cal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
@@ -50,7 +72,7 @@
 
         /* HABIT & ELEMANLAR */
         .habit-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .habit-table th { font-size: 0.7rem; color: var(--accent); padding: 10px; text-align: center; }
+        .habit-table th { font-size: 0.7rem; color: var(--accent); padding: 10px; text-align: center; transition: 0.3s; }
         .habit-table td { padding: 8px; border-bottom: 1px solid var(--border); text-align: center; }
         .check-box { width: 24px; height: 24px; border: 2.5px solid var(--accent); border-radius: 7px; cursor: pointer; margin: 0 auto; transition: 0.2s; background: transparent; display: flex; align-items: center; justify-content: center; }
         .check-box.checked { background: var(--accent); box-shadow: 0 0 12px var(--accent); }
@@ -58,7 +80,7 @@
         .btn-primary { background: var(--accent); color: #000; border: none; padding: 12px 18px; border-radius: 14px; font-weight: 800; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text); border: 1px solid var(--border); padding: 12px; border-radius: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 5px; }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
-        .input-field { background: rgba(0,0,0,0.25); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; width: 100%; font-family: inherit; outline: none; }
+        .input-field { background: rgba(0,0,0,0.25); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 12px; width: 100%; font-family: inherit; outline: none; transition: 0.3s; }
         .item-list { list-style: none; overflow-y: auto; flex: 1; width: 100%; }
         .item { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background: rgba(255,255,255,0.04); border-radius: 12px; margin-bottom: 6px; font-size: 0.85rem; width: 100%; }
 
@@ -67,11 +89,11 @@
         .hidden { display: none !important; }
         .emoji-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .emoji-btn { font-size: 1.5rem; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 12px; border: 2px solid transparent; cursor: pointer; transition: 0.2s; }
-        .emoji-btn.active { border-color: var(--accent); background: rgba(56, 189, 248, 0.1); }
+        .emoji-btn.active { border-color: var(--accent); background: rgba(255,255,255,0.1); }
         .meal-table { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; width: 100%; }
-        .meal-day { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px; border: 1px solid var(--border); }
-        .meal-day h4 { font-size: 0.8rem; color: var(--accent); text-align: center; margin-bottom: 8px; }
-        .meal-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.7rem; padding: 6px; margin-bottom: 4px; border: none; outline: none; }
+        .meal-day { background: rgba(255,255,255,0.03); border-radius: 20px; padding: 15px; border: 1px solid var(--border); transition: 0.3s; }
+        .meal-day h4 { font-size: 0.8rem; color: var(--accent); text-align: center; margin-bottom: 8px; transition: 0.3s; }
+        .meal-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.7rem; padding: 6px; margin-bottom: 4px; border: none; outline: none; transition: 0.3s; }
         .meal-label { font-size: 0.55rem; opacity: 0.4; display: block; margin-bottom: 2px; }
 
         @media (max-width: 1024px) {
@@ -96,10 +118,10 @@
     <header class="top-bar">
         <div class="welcome-text"><span data-i18n="welcome">Hoş geldin</span>, <span id="userNameDisp">Şef</span></div>
         <div style="display: flex; gap: 10px;">
-            <button class="btn-primary" onclick="toggleTheme()"><i data-lucide="sun"></i></button>
+            <button class="btn-primary" onclick="cycleTheme()" title="Tasarım Değiştir"><i data-lucide="palette"></i></button>
             
-            <button class="btn-primary" onclick="toggleModal('settingsModal')"><i data-lucide="settings"></i></button>
-            <button class="btn-primary" onclick="logOut()" style="background: #ef4444; color: #fff;"><i data-lucide="log-out"></i></button>
+            <button class="btn-primary" onclick="toggleModal('settingsModal')" title="Ayarlar"><i data-lucide="settings"></i></button>
+            <button class="btn-primary" onclick="logOut()" title="Çıkış Yap" style="background: #ef4444; color: #fff;"><i data-lucide="log-out"></i></button>
         </div>
     </header>
 
@@ -200,6 +222,14 @@
     <div class="panel" style="width: 350px;">
         <h2><i data-lucide="settings"></i> <span data-i18n="settings">Ayarlar</span></h2>
         
+        <label style="font-size: 0.7rem; opacity: 0.6; margin-bottom: 5px; display: block;" data-i18n="themeLabel">Tasarım Paketi</label>
+        <select id="themeSelect" class="input-field" onchange="applyTheme(this.value)" style="margin-bottom: 15px; cursor: pointer;">
+            <option value="onyx">🌌 Midnight Onyx</option>
+            <option value="lotus">🌸 Lotus Quartz</option>
+            <option value="amber">🔥 Solar Amber</option>
+            <option value="emerald">🌿 Aurora Emerald</option>
+        </select>
+
         <label style="font-size: 0.7rem; opacity: 0.6; margin-bottom: 5px; display: block;" data-i18n="langLabel">Sistem Dili</label>
         <select id="langSelect" class="input-field" onchange="changeLanguage(this.value)" style="margin-bottom: 15px; cursor: pointer;">
             <option value="tr">🇹🇷 Türkçe</option>
@@ -243,20 +273,41 @@
     lucide.createIcons();
 
     /* =========================================
-       0. ÇEVİRİ MOTORU (i18n)
+       0. TEMA YÖNETİM MOTORU (YENİ)
        ========================================= */
-   const dict = {
+    const themesList = ['onyx', 'lotus', 'amber', 'emerald'];
+    let currentTheme = localStorage.getItem('zen_theme') || 'onyx';
+
+    function applyTheme(themeName) {
+        document.body.setAttribute('data-theme', themeName);
+        localStorage.setItem('zen_theme', themeName);
+        currentTheme = themeName;
+        if(document.getElementById('themeSelect')) {
+            document.getElementById('themeSelect').value = themeName;
+        }
+    }
+
+    function cycleTheme() {
+        let idx = themesList.indexOf(currentTheme);
+        idx = (idx + 1) % themesList.length;
+        applyTheme(themesList[idx]);
+    }
+
+    /* =========================================
+       1. ÇEVİRİ MOTORU (i18n)
+       ========================================= */
+    const dict = {
         tr: {
             loading: "ZEN OS BAŞLATILIYOR...", welcome: "Hoş geldin", motivation: "Motivasyon", focus: "Deep Focus",
             water: "Su Takibi", planner: "Planlayıcı", todo: "To-Do List", budget: "Bütçe Takibi", mealPlan: "Haftalık Yemek Planı",
             habitTrack: "Alışkanlık Takibi", start: "Başlat", stop: "Durdur", add: "Ekle", total: "Toplam", print: "Çıktı Al",
-            settings: "Ayarlar", langLabel: "Sistem Dili", nameLabel: "İsim", save: "Kaydet", close: "Kapat",
+            settings: "Ayarlar", langLabel: "Sistem Dili", nameLabel: "İsim", themeLabel: "Tasarım Paketi", save: "Kaydet", close: "Kapat",
             todoPlace: "Ne yapıyoruz?", budgetPlace: "Gider: 500", namePlace: "İsminiz...", notePlace: "Planınız nedir?",
             focusAlert: "Focus Bitti! ✨", printTitle: "✨ Haftalık Gurme Yemek Planı ✨", printSub: "AİLE MENÜSÜ", habitHead: "Alışkanlık",
             daysShort: ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'], daysLong: ['Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi','Pazar'],
             meals: ['Sabah','Ara 1','Öğle','Ara 2','Akşam'], 
             quotes: [
-                "Gülümse, bugün harika bir gün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Küçük adımlar, büyük hayaller.",
+                "Gülümse Şef, bugün harika bir gün. 🌸", "Odaklandığın her şey güzelleşir. ✨", "Küçük adımlar, büyük hayaller.",
                 "Başlamak için mükemmel olmayı bekleme.", "Disiplin, özgürlüğün anahtarıdır.", "Geleceği tahmin etmenin en iyi yolu onu yaratmaktır.",
                 "Düşün, planla, uygula.", "Sınırlarını sen belirlersin.", "Bahaneler sonuç doğurmaz.",
                 "Başarı tesadüf değildir, bir seçimdir.", "Zihnin sakin, ruhun özgür olsun.", "Hata yapmaktan değil, denememekten kork.",
@@ -265,20 +316,20 @@
                 "Mükemmeliyetçilik ilerlemenin düşmanıdır.", "Zamanın en değerli hazinendir, iyi kullan.", "Zorluklar seni güçlendirmek için var.",
                 "Motivasyon başlatır, alışkanlık devam ettirir.", "Zirveye giden yol düz değildir.", "Yapabileceğine inanırsan, yolun yarısını geçmişsindir.",
                 "Hayat, konfor alanının bittiği yerde başlar.", "Küçük başarıları kutlamayı unutma.", "Başkalarıyla değil, dünkü kendinle yarış.",
-                "Odaklan, çalış, başar.", "Hayal et, inan ve gerçekleştir.", "Sen buna değersin, yola devam! 🚀"
+                "Odaklan, çalış, başar.", "Hayal et, inan ve gerçekleştir.", "Sen buna değersin Şef, yola devam! 🚀"
             ]
         },
         en: {
             loading: "ZEN OS STARTING...", welcome: "Welcome", motivation: "Motivation", focus: "Deep Focus",
             water: "Water Tracker", planner: "Planner", todo: "To-Do List", budget: "Budget Tracker", mealPlan: "Weekly Meal Plan",
             habitTrack: "Habit Tracker", start: "Start", stop: "Stop", add: "Add", total: "Total", print: "Print PDF",
-            settings: "Settings", langLabel: "System Language", nameLabel: "Name", save: "Save", close: "Close",
+            settings: "Settings", langLabel: "System Language", nameLabel: "Name", themeLabel: "Design Theme", save: "Save", close: "Close",
             todoPlace: "What's next?", budgetPlace: "Expense: 50", namePlace: "Your Name...", notePlace: "Your plan?",
             focusAlert: "Focus Completed! ✨", printTitle: "✨ Weekly Gourmet Meal Plan ✨", printSub: "FAMILY MENU", habitHead: "Habit",
             daysShort: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'], daysLong: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
             meals: ['Breakfast','Snack 1','Lunch','Snack 2','Dinner'], 
             quotes: [
-                "Smile, today is a great day. 🌸", "What you focus on grows. ✨", "Small steps, big dreams.",
+                "Smile Chef, today is a great day. 🌸", "What you focus on grows. ✨", "Small steps, big dreams.",
                 "Don't wait for perfection to start.", "Discipline is the key to freedom.", "The best way to predict the future is to create it.",
                 "Think, plan, execute.", "You define your own limits.", "Excuses don't get results.",
                 "Success is not an accident, it's a choice.", "Keep your mind calm, your soul free.", "Fear not making mistakes, but not trying.",
@@ -287,20 +338,20 @@
                 "Perfectionism is the enemy of progress.", "Time is your most valuable treasure, use it well.", "Hardships are there to make you stronger.",
                 "Motivation gets you started, habit keeps you going.", "The road to the top is not flat.", "Believe you can, and you're halfway there.",
                 "Life begins at the end of your comfort zone.", "Don't forget to celebrate small wins.", "Compete with who you were yesterday, not others.",
-                "Focus, work, succeed.", "Dream it, believe it, and achieve it.", "You are worth it, keep going! 🚀"
+                "Focus, work, succeed.", "Dream it, believe it, and achieve it.", "You are worth it Chef, keep going! 🚀"
             ]
         },
         de: {
             loading: "ZEN OS STARTET...", welcome: "Willkommen", motivation: "Motivation", focus: "Tiefer Fokus",
             water: "Wassertracker", planner: "Planer", todo: "To-Do Liste", budget: "Budget-Tracker", mealPlan: "Wöchentlicher Speiseplan",
             habitTrack: "Gewohnheitstracker", start: "Starten", stop: "Stopp", add: "Hinzufügen", total: "Gesamt", print: "Drucken",
-            settings: "Einstellungen", langLabel: "Systemsprache", nameLabel: "Name", save: "Speichern", close: "Schließen",
+            settings: "Einstellungen", langLabel: "Systemsprache", nameLabel: "Name", themeLabel: "Design-Thema", save: "Speichern", close: "Schließen",
             todoPlace: "Was steht an?", budgetPlace: "Ausgabe: 50", namePlace: "Dein Name...", notePlace: "Dein Plan?",
             focusAlert: "Fokus Beendet! ✨", printTitle: "✨ Wöchentlicher Gourmet-Speiseplan ✨", printSub: "FAMILIENMENÜ", habitHead: "Gewohnheit",
             daysShort: ['Mo','Di','Mi','Do','Fr','Sa','So'], daysLong: ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'],
             meals: ['Frühstück','Snack 1','Mittagessen','Snack 2','Abendessen'], 
             quotes: [
-                "Lächle, heute ist ein toller Tag. 🌸", "Worauf du dich fokussierst, wächst. ✨", "Kleine Schritte, große Träume.",
+                "Lächle Chef, heute ist ein toller Tag. 🌸", "Worauf du dich fokussierst, wächst. ✨", "Kleine Schritte, große Träume.",
                 "Warte nicht auf Perfektion, um anzufangen.", "Disziplin ist der Schlüssel zur Freiheit.", "Der beste Weg, die Zukunft vorauszusagen, ist, sie zu erschaffen.",
                 "Denken, planen, ausführen.", "Du definierst deine eigenen Grenzen.", "Ausreden bringen keine Ergebnisse.",
                 "Erfolg ist kein Zufall, es ist eine Entscheidung.", "Halte deinen Geist ruhig, deine Seele frei.", "Fürchte dich nicht davor, Fehler zu machen, sondern davor, es nicht zu versuchen.",
@@ -309,20 +360,20 @@
                 "Perfektionismus ist der Feind des Fortschritts.", "Zeit ist dein wertvollster Schatz, nutze sie gut.", "Schwierigkeiten sind dazu da, dich stärker zu machen.",
                 "Motivation lässt dich anfangen, Gewohnheit lässt dich weitermachen.", "Der Weg nach oben ist nicht flach.", "Glaube daran, dass du es kannst, und du hast die halbe Miete.",
                 "Das Leben beginnt am Ende deiner Komfortzone.", "Vergiss nicht, kleine Erfolge zu feiern.", "Konkurriere mit dem, der du gestern warst, nicht mit anderen.",
-                "Fokussieren, arbeiten, erfolgreich sein.", "Träume es, glaube daran und erreiche es.", "Du bist es wert, mach weiter! 🚀"
+                "Fokussieren, arbeiten, erfolgreich sein.", "Träume es, glaube daran und erreiche es.", "Du bist es wert Chef, mach weiter! 🚀"
             ]
         },
         fr: {
             loading: "ZEN OS DÉMARRE...", welcome: "Bienvenue", motivation: "Motivation", focus: "Concentration Profonde",
             water: "Suivi d'Eau", planner: "Planificateur", todo: "Liste de Tâches", budget: "Suivi du Budget", mealPlan: "Plan de Repas Hebdomadaire",
             habitTrack: "Suivi des Habitudes", start: "Démarrer", stop: "Arrêter", add: "Ajouter", total: "Total", print: "Imprimer",
-            settings: "Paramètres", langLabel: "Langue du Système", nameLabel: "Nom", save: "Enregistrer", close: "Fermer",
+            settings: "Paramètres", langLabel: "Langue du Système", nameLabel: "Nom", themeLabel: "Thème de Conception", save: "Enregistrer", close: "Fermer",
             todoPlace: "Que faire?", budgetPlace: "Dépense: 50", namePlace: "Votre Nom...", notePlace: "Votre plan?",
             focusAlert: "Concentration Terminée! ✨", printTitle: "✨ Plan de Repas Gourmet Hebdomadaire ✨", printSub: "MENU FAMILIAL", habitHead: "Habitude",
             daysShort: ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'], daysLong: ['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'],
             meals: ['Petit-déjeuner','Collation 1','Déjeuner','Collation 2','Dîner'], 
             quotes: [
-                "Souriez, c'est une belle journée. 🌸", "Ce sur quoi vous vous concentrez grandit. ✨", "Petits pas, grands rêves.",
+                "Souriez Chef, c'est une belle journée. 🌸", "Ce sur quoi vous vous concentrez grandit. ✨", "Petits pas, grands rêves.",
                 "N'attendez pas la perfection pour commencer.", "La discipline est la clé de la liberté.", "La meilleure façon de prédire l'avenir est de le créer.",
                 "Pensez, planifiez, exécutez.", "Vous définissez vos propres limites.", "Les excuses ne donnent pas de résultats.",
                 "Le succès n'est pas un accident, c'est un choix.", "Gardez l'esprit calme, l'âme libre.", "Ne craignez pas de faire des erreurs, mais de ne pas essayer.",
@@ -331,7 +382,7 @@
                 "Le perfectionnisme est l'ennemi du progrès.", "Le temps est votre trésor le plus précieux, utilisez-le bien.", "Les difficultés sont là pour vous rendre plus fort.",
                 "La motivation vous fait commencer, l'habitude vous fait continuer.", "La route vers le sommet n'est pas plate.", "Croyez que vous pouvez, et vous avez fait la moitié du chemin.",
                 "La vie commence à la fin de votre zone de confort.", "N'oubliez pas de célébrer les petites victoires.", "Rivalisez avec qui vous étiez hier, pas avec les autres.",
-                "Concentrez-vous, travaillez, réussissez.", "Rêvez-le, croyez-le et réalisez-le.", "Tu le vaux bien, continue ! 🚀"
+                "Concentrez-vous, travaillez, réussissez.", "Rêvez-le, croyez-le et réalisez-le.", "Tu le vaux bien Chef, continue ! 🚀"
             ]
         }
     };
@@ -342,11 +393,9 @@
         currentLang = lang;
         localStorage.setItem('zen_lang', lang);
         applyTranslations();
-        // Arayüzleri yeni dille tekrar çiz
         Life.renderMeals(); 
         Life.renderHabits();
         Cal.render();
-        // Rastgele yeni bir motivasyon sözü seç
         const q = dict[currentLang].quotes;
         document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
     }
@@ -354,14 +403,10 @@
     function applyTranslations() {
         const t = dict[currentLang];
         document.getElementById('langSelect').value = currentLang;
-        
-        // Metinleri Değiştir
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if(t[key]) el.innerText = t[key];
         });
-        
-        // İpucu (Placeholder) Metinlerini Değiştir
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
             const key = el.getAttribute('data-i18n-placeholder');
             if(t[key]) el.setAttribute('placeholder', t[key]);
@@ -369,7 +414,7 @@
     }
 
     /* =========================================
-       1. FIREBASE BAĞLANTISI VE KORUMA
+       2. FIREBASE BAĞLANTISI VE KORUMA
        ========================================= */
     const firebaseConfig = {
         apiKey: "AIzaSyACMszR6WT9YHxgpKTQk9FJtWZzEj2SKZk",
@@ -411,12 +456,12 @@
     });
 
     function logOut() {
-        for (let key in localStorage) { if (key.startsWith('zen_') && key !== 'zen_theme') { localStorage.removeItem(key); } }
+        for (let key in localStorage) { if (key.startsWith('zen_') && key !== 'zen_theme' && key !== 'zen_lang') { localStorage.removeItem(key); } }
         auth.signOut().then(() => { window.location.href = "login.html"; });
     }
 
     /* =========================================
-       2. HİBRİT VERİTABANI
+       3. HİBRİT VERİTABANI
        ========================================= */
     const DB = {
         get: (k) => JSON.parse(localStorage.getItem(k)),
@@ -434,7 +479,7 @@
     };
 
     /* =========================================
-       3. MODÜLLER
+       4. MODÜLLER
        ========================================= */
     const Cal = {
         date: new Date(), selectedDate: null, emoji: '💖', events: {},
@@ -442,11 +487,8 @@
         render() {
             const grid = document.getElementById('calGrid'); grid.innerHTML = '';
             const y = this.date.getFullYear(), m = this.date.getMonth();
-            
-            // Ay ismini dinamik dile göre yazdır
             const langCode = currentLang === 'en' ? 'en-US' : currentLang === 'de' ? 'de-DE' : currentLang === 'fr' ? 'fr-FR' : 'tr-TR';
             document.getElementById('calMonthTitle').innerText = new Intl.DateTimeFormat(langCode, {month:'long', year:'numeric'}).format(this.date);
-            
             const daysInMonth = new Date(y, m+1, 0).getDate();
             for(let i=1; i<=daysInMonth; i++) {
                 const key = `${y}-${m+1}-${i}`;
@@ -510,7 +552,7 @@
         renderMeals() {
             const grid = document.getElementById('mealGrid'); grid.innerHTML = '';
             const t = dict[currentLang];
-            const dbKeys = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz']; // Veritabanı anahtarları sabit kalmalı
+            const dbKeys = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz'];
             
             t.daysShort.forEach((displayDay, dayIndex) => {
                 const dbKeyDay = dbKeys[dayIndex];
@@ -575,7 +617,6 @@
     };
 
     function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
-    function toggleTheme() { const b = document.body; b.getAttribute('data-theme')==='zen' ? b.removeAttribute('data-theme') : b.setAttribute('data-theme','zen'); }
     function saveProfile() { 
         const newName = document.getElementById('userNameIn').value;
         if(newName && currentUid) { db.ref('users/' + currentUid + '/fullName').set(newName).then(() => { document.getElementById('userNameDisp').innerText = newName; toggleModal('settingsModal'); }); }
@@ -585,7 +626,9 @@
     async function exportPDF() {
         const { jsPDF } = window.jspdf; const pdf = new jsPDF('l', 'mm', 'a3');
         const captureArea = document.getElementById('captureArea');
-        html2canvas(captureArea, { scale: 1.5, backgroundColor: '#020617' }).then(canvas => { 
+        // PDF arka planı her zaman aktif temanın rengiyle insin diye:
+        const bgColor = getComputedStyle(document.body).getPropertyValue('--bg').trim() || '#020617';
+        html2canvas(captureArea, { scale: 1.5, backgroundColor: bgColor }).then(canvas => { 
             pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, 420, 297); pdf.save('ZenOS_Dashboard.pdf'); 
         });
     }
@@ -598,7 +641,7 @@
         const printGrid = document.getElementById('printMealGrid');
         printGrid.innerHTML = '';
         const meals = DB.get('zen_meals_v3') || {};
-        const dbKeys = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz']; // Veritabanından çekerken anahtarlar sabit
+        const dbKeys = ['Pzt','Sal','Çar','Per','Cum','Cts','Paz']; 
 
         t.daysLong.forEach((displayDay, index) => {
             const dbKeyDay = dbKeys[index];
@@ -627,6 +670,7 @@
     }
 
     function startApp() {
+        applyTheme(currentTheme);
         applyTranslations();
         const q = dict[currentLang].quotes;
         document.getElementById('quoteBox').innerText = `"${q[Math.floor(Math.random()*q.length)]}"`;
