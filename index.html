@@ -9,6 +9,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check-compat.js"></script>
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
@@ -427,6 +428,12 @@
     };
 
     firebase.initializeApp(firebaseConfig);
+    // Görünmez Bot Savar (App Check)
+    const appCheck = firebase.appCheck();
+    appCheck.activate(
+        '6LejcYssAAAAANpiYVbRP88MSMvmPJXZ4_5-kH4X', 
+        true // Otomatik yenilemeyi aç
+    );
     const auth = firebase.auth();
     const db = firebase.database();
     let currentUid = null;
