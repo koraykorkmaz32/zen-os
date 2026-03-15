@@ -6,11 +6,12 @@
     <title>Zen OS | Sisteme Giriş</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check-compat.js"></script>
+    
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check-compat.js"></script>
 
     <style>
         /* --- TASARIM VE DEĞİŞKENLER --- */
@@ -174,10 +175,11 @@
 
     // Firebase'i Başlat
     firebase.initializeApp(firebaseConfig);
-    // Görünmez Bot Savar (App Check)
+
+    // Görünmez Bot Savar (App Check) - Kusursuz Kurulum
     const appCheck = firebase.appCheck();
     appCheck.activate(
-        '6LejcYssAAAAANpiYVbRP88MSMvmPJXZ4_5-kH4X', 
+        new firebase.appCheck.ReCaptchaV3Provider('6LejcYssAAAAANpiYVbRP88MSMvmPJXZ4_5-kH4X'),
         true // Otomatik yenilemeyi aç
     );
     const auth = firebase.auth();
