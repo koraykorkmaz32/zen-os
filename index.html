@@ -9,11 +9,12 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check-compat.js"></script>
+    
     
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-check-compat.js"></script>
 
     <style>
         /* --- 4 PREMIUM TASARIM PAKETİ --- */
@@ -427,13 +428,16 @@
         appId: "1:273234191782:web:2d611bf016ed9ffdd4db67"
     };
 
+  
     firebase.initializeApp(firebaseConfig);
-    // Görünmez Bot Savar (App Check)
+
+    // Görünmez Bot Savar (App Check) - Kusursuz Kurulum
     const appCheck = firebase.appCheck();
     appCheck.activate(
-        '6LejcYssAAAAANpiYVbRP88MSMvmPJXZ4_5-kH4X', 
+        new firebase.appCheck.ReCaptchaV3Provider('6LejcYssAAAAANpiYVbRP88MSMvmPJXZ4_5-kH4X'),
         true // Otomatik yenilemeyi aç
     );
+    
     const auth = firebase.auth();
     const db = firebase.database();
     let currentUid = null;
