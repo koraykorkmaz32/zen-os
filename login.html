@@ -146,13 +146,32 @@
 <div id="termsModal" class="modal hidden">
     <div class="modal-content">
         <h2 style="color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text"></i> Terms of Service</h2>
-        <p style="font-size: 0.85rem; line-height: 1.6; opacity: 0.8; margin-bottom: 20px;">
-            1. All rights of this software are reserved. Copying, reproducing, or unauthorized distribution is strictly prohibited.<br><br>
-            2. Purchase codes are single-use and cannot be shared with others.<br><br>
-            3. Personal data entered into the system is stored securely end-to-end with Firebase infrastructure.<br><br>
-            4. The Admin reserves the right to suspend accounts that violate the rules at any time.
-        </p>
-        <button class="btn-primary" onclick="toggleModal('termsModal')">I understand, Close</button>
+        
+        <div style="font-size: 0.85rem; line-height: 1.6; opacity: 0.8; margin-bottom: 20px; text-align: left; max-height: 300px; overflow-y: auto; padding-right: 10px;">
+            
+            <strong>1. Intellectual Property & Single Use:</strong> All rights reserved. Copying, reproducing, reverse engineering, or unauthorized distribution of this software is strictly prohibited. Purchase codes (licenses) are single-use. Sharing licenses will result in immediate and permanent account termination.<br><br>
+            
+            <strong>2. Service Continuity & Right to Terminate:</strong> The system is provided on an "As-Is" basis. We do not guarantee 24/7 uptime, continuous server availability, or lifetime access. The Administrator reserves the right to modify, suspend, or permanently terminate the service at any time without prior notice.<br><br>
+            
+            <strong>3. Data Loss & Third-Party Infrastructure:</strong> This service relies on third-party cloud providers (e.g., Google Firebase). The Administrator is not liable for server crashes, cyberattacks, or any loss of user data. Users are solely responsible for backing up their own data.<br><br>
+            
+            <strong>4. Advisory Nature & Personal Liability:</strong> Tools provided (budget, meal plans, tasks) are for organizational purposes only. Syncmy.life assumes no responsibility for any financial losses, health issues, or professional damages arising from the use of these tools.<br><br>
+            
+            <strong>5. Refund Policy & Limitation of Liability:</strong> As a digital product, licenses are deemed consumed upon registration. Therefore, NO REFUNDS will be issued under any circumstances. In any dispute, maximum liability shall not exceed the original license purchase price.<br><br>
+            
+            <strong>6. Account Suspension:</strong> The Administrator reserves the unilateral right to freeze or permanently ban accounts exhibiting abusive behavior, bot usage, or TOS violations, without prior warning.<br><br>
+            
+            <strong>7. Age Requirement:</strong> Users must be legally adult (18+) or possess explicit consent from a legal guardian. The platform accepts no financial or legal liability for unauthorized transactions by minors.<br><br>
+            
+            <strong>8. Jurisdiction & Class Action Waiver:</strong> These terms are governed by the laws of the Republic of Turkey. Exclusive jurisdiction lies with the Turkish courts. Users expressly waive their right to file or participate in any Class Action lawsuit against the platform.<br><br>
+            
+            <strong>9. User-Generated Content:</strong> Users are entirely responsible for all data, text, and inputs entered into the system. The platform does not proactively monitor content and accepts no liability for unlawful user entries.<br><br>
+            
+            <strong>10. Right to Modify Terms:</strong> The Administrator may update these Terms, pricing models, or features at any time. Existing licenses cover only the features available at the exact time of purchase; future premium additions may require extra fees.
+
+        </div>
+
+        <button class="btn-primary" onclick="toggleModal('termsModal')">I accept the terms, Close</button>
     </div>
 </div>
 
