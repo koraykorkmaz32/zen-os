@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -75,8 +75,8 @@
 
 <div id="securityBreach">
     <i data-lucide="shield-alert" style="width: 48px; height: 48px; margin-bottom: 10px;"></i><br>
-    Sistem Erişimi Reddedildi.<br>
-    <span style="font-size: 0.8rem; font-weight: 400; opacity: 0.8;">Bu yazılım lisanssız bir alan adında çalıştırılamaz.</span>
+    System Access Denied.<br>
+    <span style="font-size: 0.8rem; font-weight: 400; opacity: 0.8;">This software cannot be run on an unlicensed domain.</span>
 </div>
 
 <div class="auth-container" id="authBox">
@@ -89,21 +89,21 @@
         
         <div class="input-group">
             <i data-lucide="mail"></i>
-            <input type="email" id="loginEmail" class="input-field" placeholder="E-posta adresiniz">
+            <input type="email" id="loginEmail" class="input-field" placeholder="Email address">
         </div>
         <div class="input-group">
             <i data-lucide="lock"></i>
-            <input type="password" id="loginPassword" class="input-field" placeholder="Şifreniz">
+            <input type="password" id="loginPassword" class="input-field" placeholder="Password">
         </div>
         
         <div class="auth-links" style="justify-content: flex-end; margin-bottom: 15px;">
-            <span class="auth-link" onclick="resetPassword()">Şifremi unuttum</span>
+            <span class="auth-link" onclick="resetPassword()">Forgot password</span>
         </div>
 
-        <button class="btn-primary" id="loginBtn" onclick="handleLogin()">Giriş Yap</button>
+        <button class="btn-primary" id="loginBtn" onclick="handleLogin()">Sign In</button>
         
         <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; opacity: 0.7;">
-            Üye değil misin? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Hemen Kayıt Ol</span>
+            Not a member? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Register Now</span>
         </div>
     </div>
 
@@ -115,44 +115,44 @@
         
         <div class="input-group">
             <i data-lucide="user"></i>
-            <input type="text" id="regName" class="input-field" placeholder="Adınız Soyadınız">
+            <input type="text" id="regName" class="input-field" placeholder="Full Name">
         </div>
         <div class="input-group">
             <i data-lucide="mail"></i>
-            <input type="email" id="regEmail" class="input-field" placeholder="E-posta adresiniz">
+            <input type="email" id="regEmail" class="input-field" placeholder="Email address">
         </div>
         <div class="input-group">
             <i data-lucide="lock"></i>
-            <input type="password" id="regPassword" class="input-field" placeholder="Şifreniz (En az 6 hane)">
+            <input type="password" id="regPassword" class="input-field" placeholder="Password (Min. 6 characters)">
         </div>
         <div class="input-group">
             <i data-lucide="key"></i>
-            <input type="text" id="regCode" class="input-field" placeholder="Satın Alma Kodu (Lisans)" style="border-color: var(--accent);">
+            <input type="text" id="regCode" class="input-field" placeholder="Purchase Code (License)" style="border-color: var(--accent);">
         </div>
 
         <div class="terms-group">
             <input type="checkbox" id="termsCheck">
-            <label for="termsCheck"><span class="auth-link" onclick="toggleModal('termsModal')">Kullanım Şartları</span>'nı okudum ve anladım.</label>
+            <label for="termsCheck">I have read and understood the <span class="auth-link" onclick="toggleModal('termsModal')">Terms of Service</span>.</label>
         </div>
 
-        <button class="btn-primary" id="regBtn" onclick="handleRegister()">Üye Ol</button>
+        <button class="btn-primary" id="regBtn" onclick="handleRegister()">Sign Up</button>
         
         <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; opacity: 0.7;">
-            Zaten üye misin? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Giriş Yap</span>
+            Already a member? <span class="auth-link" style="font-weight: bold;" onclick="toggleForms()">Sign In</span>
         </div>
     </div>
 </div>
 
 <div id="termsModal" class="modal hidden">
     <div class="modal-content">
-        <h2 style="color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text"></i> Kullanım Şartları</h2>
+        <h2 style="color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;"><i data-lucide="file-text"></i> Terms of Service</h2>
         <p style="font-size: 0.85rem; line-height: 1.6; opacity: 0.8; margin-bottom: 20px;">
-            1. Bu yazılımın tüm hakları saklıdır. Kopyalanması, çoğaltılması veya izinsiz dağıtılması yasaktır.<br><br>
-            2. Satın alma kodları tek kullanımlıktır ve başkalarıyla paylaşılamaz.<br><br>
-            3. Sisteme girilen kişisel veriler Firebase altyapısı ile uçtan uca güvenli bir şekilde saklanır.<br><br>
-            4. Şef, kurallara uymayan hesapları dilediği zaman askıya alma hakkını saklı tutar.
+            1. All rights of this software are reserved. Copying, reproducing, or unauthorized distribution is strictly prohibited.<br><br>
+            2. Purchase codes are single-use and cannot be shared with others.<br><br>
+            3. Personal data entered into the system is stored securely end-to-end with Firebase infrastructure.<br><br>
+            4. The Admin reserves the right to suspend accounts that violate the rules at any time.
         </p>
-        <button class="btn-primary" onclick="toggleModal('termsModal')">Okudum, Kapat</button>
+        <button class="btn-primary" onclick="toggleModal('termsModal')">I understand, Close</button>
     </div>
 </div>
 
@@ -225,19 +225,19 @@
         const pass = document.getElementById('loginPassword').value;
         const btn = document.getElementById('loginBtn');
         
-        if(!email || !pass) { alert("Lütfen e-posta ve şifrenizi girin."); return; }
+        if(!email || !pass) { alert("Please enter your email and password."); return; }
         
-        btn.disabled = true; btn.innerText = "Giriş Yapılıyor...";
+        btn.disabled = true; btn.innerText = "Signing In...";
 
         auth.signInWithEmailAndPassword(email, pass)
             .then(() => {
                 window.location.href = "index.html"; // Başarılıysa içeri al
             })
             .catch((error) => {
-                btn.disabled = false; btn.innerText = "Giriş Yap";
-                let msg = "Bir hata oluştu.";
-                if(error.code === 'auth/user-not-found') msg = "Bu e-posta kayıtlı değil.";
-                if(error.code === 'auth/wrong-password') msg = "Şifre hatalı.";
+                btn.disabled = false; btn.innerText = "Sign In";
+                let msg = "An error occurred.";
+                if(error.code === 'auth/user-not-found') msg = "This email is not registered.";
+                if(error.code === 'auth/wrong-password') msg = "Incorrect password.";
                 alert(msg);
             });
     }
@@ -252,22 +252,22 @@
         const terms = document.getElementById('termsCheck').checked;
         const btn = document.getElementById('regBtn');
 
-        if(!name || !email || !pass || !code) { alert("Lütfen tüm alanları doldurun."); return; }
-        if(pass.length < 6) { alert("Şifre en az 6 haneli olmalıdır."); return; }
-        if(!terms) { alert("Kayıt olmak için kullanım şartlarını kabul etmelisiniz."); return; }
+        if(!name || !email || !pass || !code) { alert("Please fill in all fields."); return; }
+        if(pass.length < 6) { alert("Password must be at least 6 characters."); return; }
+        if(!terms) { alert("You must accept the terms of service to register."); return; }
 
-        btn.disabled = true; btn.innerText = "Lisans Kontrol Ediliyor...";
+        btn.disabled = true; btn.innerText = "Checking License...";
 
         // 1. AŞAMA: LİSANS KODUNU BULUTTA DOĞRULA
         db.ref('license_keys/' + code).once('value').then(snap => {
             if (!snap.exists() || snap.val().status !== 'active') {
-                alert("Geçersiz veya daha önce kullanılmış bir lisans kodu girdiniz!");
-                btn.disabled = false; btn.innerText = "Üye Ol";
+                alert("You have entered an invalid or already used license code!");
+                btn.disabled = false; btn.innerText = "Sign Up";
                 return;
             }
 
             // 2. AŞAMA: KOD GEÇERLİYSE KULLANICIYI OLUŞTUR
-            btn.innerText = "Hesap Oluşturuluyor...";
+            btn.innerText = "Creating Account...";
             auth.createUserWithEmailAndPassword(email, pass)
                 .then((userCredential) => {
                     const user = userCredential.user;
@@ -289,29 +289,29 @@
                 })
                 .then(() => {
                     localStorage.setItem('zen_name', name);
-                    alert("Kayıt başarılı! Lisansınız onaylandı.");
+                    alert("Registration successful! Your license is approved.");
                     window.location.href = "index.html";
                 })
                 .catch((error) => {
-                    btn.disabled = false; btn.innerText = "Üye Ol";
+                    btn.disabled = false; btn.innerText = "Sign Up";
                     let msg = error.message;
-                    if(error.code === 'auth/email-already-in-use') msg = "Bu e-posta adresi zaten kullanımda.";
+                    if(error.code === 'auth/email-already-in-use') msg = "This email address is already in use.";
                     alert(msg);
                 });
         }).catch(err => {
-            alert("Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.");
-            btn.disabled = false; btn.innerText = "Üye Ol";
+            alert("Could not connect to the server. Please check your internet connection.");
+            btn.disabled = false; btn.innerText = "Sign Up";
         });
     }
 
     // ŞİFRE SIFIRLAMA
     function resetPassword() {
         const email = document.getElementById('loginEmail').value.trim();
-        if(!email) { alert("Lütfen şifresini sıfırlamak istediğiniz e-posta adresini kutucuğa yazın ve tekrar tıklayın."); return; }
+        if(!email) { alert("Please enter the email address you want to reset the password for in the box and click again."); return; }
         
         auth.sendPasswordResetEmail(email)
-            .then(() => alert("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi! Lütfen gelen kutunuzu kontrol edin."))
-            .catch((error) => alert("Hata: " + error.message));
+            .then(() => alert("Password reset link has been sent to your email address! Please check your inbox."))
+            .catch((error) => alert("Error: " + error.message));
     }
 </script>
     <script>
@@ -319,8 +319,8 @@
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('PWA Hazır!', reg.scope))
-                .catch(err => console.log('PWA Hatası:', err));
+                .then(reg => console.log('PWA Ready!', reg.scope))
+                .catch(err => console.log('PWA Error:', err));
         });
     }
 </script>
