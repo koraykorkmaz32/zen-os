@@ -467,7 +467,7 @@
         document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%'>Lisanssız Kullanım Engellendi.</h1>";
     }
 
-    auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged((user) => {
         if (!user) {
             window.location.href = "login.html";
         } else {
@@ -482,9 +482,60 @@
                 document.getElementById('loadingScreen').style.display = 'none';
                 document.getElementById('mainApp').style.display = 'block';
                 startApp();
+                enableRealtimeSync(); // 🔥 GERÇEK ZAMANLI MOTORU BAŞLAT
             });
         }
     });
+
+    // 🔥 GERÇEK ZAMANLI (REAL-TIME) SENKRONİZASYON MOTORU
+    function enableRealtimeSync() {
+        if(!currentUid) return;
+        db.ref('users/' + currentUid + '/data').on('value', snap => {
+            if(snap.exists()) {
+                const cloudData = snap.val();
+                
+                // 1. Su Takibi Canlı Senkronizasyon
+                const cloudWater = cloudData.zen_water_v5 || [];
+                if(JSON.stringify(Water.active) !== JSON.stringify(cloudWater)) {
+                    Water.active = cloudWater;
+                    localStorage.setItem('zen_water_v5', JSON.stringify(Water.active));
+                    Water.render();
+                }
+
+                // 2. Focus Timer Canlı Senkronizasyon
+                if(cloudData.zen_focus_v1) {
+                    const localFocus = DB.get('zen_focus_v1') || {};
+                    if(JSON.stringify(localFocus) !== JSON.stringify(cloudData.zen_focus_v1)) {
+                        localStorage.setItem('zen_focus_v1', JSON.stringify(cloudData.zen_focus_v1));
+                        const state = cloudData.zen_focus_v1;
+                        if(state.status === 'running') {
+                            const remaining = Math.floor((state.endTime - Date.now()) / 1000);
+                            if(remaining > 0) {
+                                document.getElementById('timerMin').value = state.duration / 60;
+                                Focus.startLocal(state.endTime);
+                            }
+                        } else {
+                            if(Focus.timer) { clearInterval(Focus.timer); Focus.timer = null; }
+                            document.getElementById('timerCtrl').innerText = dict[currentLang].start;
+                            Focus.timeLeft = state.duration;
+                            Focus.updateUI();
+                        }
+                    }
+                }
+
+                // 3. To-Do ve Bütçe Canlı Senkronizasyon (Bonus Premium His)
+                ['todo', 'budget'].forEach(type => {
+                    const key = 'zen_' + type + '_v4';
+                    const cloudList = cloudData[key] || [];
+                    if(JSON.stringify(Lists[type]) !== JSON.stringify(cloudList)) {
+                        Lists[type] = cloudList;
+                        localStorage.setItem(key, JSON.stringify(cloudList));
+                        Lists.render(type);
+                    }
+                });
+            }
+        });
+    }
 
     function logOut() {
         for (let key in localStorage) { if (key.startsWith('zen_') && key !== 'zen_theme' && key !== 'zen_lang') { localStorage.removeItem(key); } }
@@ -629,21 +680,63 @@
         }
     };
 
-    const Focus = {
+const Focus = {
         timer: null, timeLeft: 25*60,
-        init() { document.getElementById('timerCtrl').onclick = () => this.toggle(); },
-        toggle() { this.timer ? this.stop() : this.start(); },
-        start() {
-            this.timeLeft = document.getElementById('timerMin').value * 60; 
+        init() { 
+            document.getElementById('timerCtrl').onclick = () => this.toggle(); 
+            // Sayfa yenilendiğinde DB'den mevcut durumu çek
+            const savedState = DB.get('zen_focus_v1');
+            if(savedState && savedState.status === 'running') {
+                const remaining = Math.floor((savedState.endTime - Date.now()) / 1000);
+                if(remaining > 0) {
+                    document.getElementById('timerMin').value = savedState.duration / 60;
+                    this.startLocal(savedState.endTime);
+                } else {
+                    this.stop(true); // Süre bitmişse durdur
+                }
+            } else if(savedState) {
+                this.timeLeft = savedState.duration;
+                if(document.getElementById('timerMin')) document.getElementById('timerMin').value = savedState.duration / 60;
+                this.updateUI();
+            }
+        },
+        toggle() { this.timer ? this.stop(true) : this.start(true); },
+        start(broadcast = false) {
+            this.timeLeft = document.getElementById('timerMin').value * 60;
+            const targetTime = Date.now() + (this.timeLeft * 1000);
+            if(broadcast) DB.set('zen_focus_v1', { status: 'running', duration: this.timeLeft, endTime: targetTime });
+            this.startLocal(targetTime);
+        },
+        startLocal(targetTime) {
+            if(this.timer) clearInterval(this.timer);
             document.getElementById('timerCtrl').innerText = dict[currentLang].stop;
             this.timer = setInterval(() => { 
-                this.timeLeft--; this.updateUI(); 
-                if(this.timeLeft<=0){ this.stop(); alert(dict[currentLang].focusAlert); } 
+                this.timeLeft = Math.floor((targetTime - Date.now()) / 1000);
+                if(this.timeLeft <= 0) { this.stop(true); alert(dict[currentLang].focusAlert); } 
+                else { this.updateUI(); }
             }, 1000);
+            this.updateUI();
         },
-        stop() { clearInterval(this.timer); this.timer = null; document.getElementById('timerCtrl').innerText = dict[currentLang].start; },
-        reset() { this.stop(); this.timeLeft = document.getElementById('timerMin').value * 60; this.updateUI(); },
-        updateUI() { const m = Math.floor(this.timeLeft/60), s = this.timeLeft%60; document.getElementById('timerDisp').innerText = `${m}:${s.toString().padStart(2,'0')}`; }
+        stop(broadcast = false) { 
+            if(this.timer) clearInterval(this.timer); 
+            this.timer = null; 
+            document.getElementById('timerCtrl').innerText = dict[currentLang].start; 
+            if(broadcast) {
+                const dur = document.getElementById('timerMin').value * 60;
+                DB.set('zen_focus_v1', { status: 'stopped', duration: dur });
+                this.timeLeft = dur;
+                this.updateUI();
+            }
+        },
+        reset() { 
+            this.stop(true); 
+            this.timeLeft = document.getElementById('timerMin').value * 60; 
+            this.updateUI(); 
+        },
+        updateUI() { 
+            const m = Math.max(0, Math.floor(this.timeLeft/60)), s = Math.max(0, this.timeLeft%60); 
+            document.getElementById('timerDisp').innerText = `${m}:${s.toString().padStart(2,'0')}`; 
+        }
     };
 
     const Lists = {
