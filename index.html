@@ -261,14 +261,25 @@
     <div class="panel" style="width: 420px; max-height:90vh">
         <h2 id="calModalTitle">Tarih</h2>
         <div class="emoji-selector" id="emojiSelector">
-            <button class="emoji-btn active" onclick="Cal.selEmoji('💖')">💖</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('🌸')">🌸</button>
+            <button class="emoji-btn active" onclick="Cal.selEmoji('🌸')">🌸</button>
             <button class="emoji-btn" onclick="Cal.selEmoji('🧘‍♀️')">🧘‍♀️</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('🏋️‍♀️')">🏋️‍♀️</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('🥗')">🥗</button>
+            
+            <button class="emoji-btn" onclick="Cal.selEmoji('💡')">💡</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('📅')">📅</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('💻')">💻</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('📧')">📧</button>
+            
+            <button class="emoji-btn" onclick="Cal.selEmoji('📈')">📈</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('💰')">💰</button>
             <button class="emoji-btn" onclick="Cal.selEmoji('🛍️')">🛍️</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('💳')">💳</button>
+            
+            <button class="emoji-btn" onclick="Cal.selEmoji('🤝')">🤝</button>
+            <button class="emoji-btn" onclick="Cal.selEmoji('📣')">📣</button>
             <button class="emoji-btn" onclick="Cal.selEmoji('📖')">📖</button>
             <button class="emoji-btn" onclick="Cal.selEmoji('☕')">☕</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('🎀')">🎀</button>
-            <button class="emoji-btn" onclick="Cal.selEmoji('✨')">✨</button>
         </div>
         <div style="display:flex; gap:8px; margin-bottom:15px">
             <input id="calNoteIn" class="input-field" data-i18n-placeholder="notePlace" placeholder="Notunuz...">
@@ -502,7 +513,7 @@
        4. MODÜLLER
        ========================================= */
     const Cal = {
-        date: new Date(), selectedDate: null, emoji: '💖', events: {},
+        date: new Date(), selectedDate: null, emoji: '🌸', events: {},
         init() { this.events = DB.get('zen_cal_v5') || {}; this.render(); },
         render() {
             const grid = document.getElementById('calGrid'); grid.innerHTML = '';
@@ -513,12 +524,20 @@
             for(let i=1; i<=daysInMonth; i++) {
                 const key = `${y}-${m+1}-${i}`;
                 const isToday = i === new Date().getDate() && m === new Date().getMonth();
+                
+                // Gün ismini seçili dile göre dinamik olarak al (Pzt, Mon, Mo, Lun vb.)
+                const currentDate = new Date(y, m, i);
+                const dayName = new Intl.DateTimeFormat(langCode, {weekday:'short'}).format(currentDate);
+                
                 const div = document.createElement('div');
                 div.className = `cal-day ${isToday?'today':''}`;
                 let icons = '<div class="day-indicators">';
                 if(this.events[key]) this.events[key].slice(0,2).forEach(ev => icons += `<span>${ev.emoji}</span>`);
                 icons += '</div>';
-                div.innerHTML = `<span>${i}</span>${icons}`;
+                
+                // Tasarımı bozmadan gün ismini şık bir şekilde sayının üstüne ekledik
+                div.innerHTML = `<span style="font-size:0.55rem; opacity:0.6; text-transform:uppercase; line-height:1; margin-bottom:2px">${dayName}</span><span style="font-size:1.1rem; line-height:1.2">${i}</span>${icons}`;
+                
                 div.onclick = () => { this.selectedDate = key; document.getElementById('calModalTitle').innerText = key; this.renderNotes(); toggleModal('calModal'); };
                 grid.appendChild(div);
             }
@@ -532,6 +551,9 @@
             this.events[this.selectedDate].push({ emoji: this.emoji, text: val, id: Date.now() });
             DB.set('zen_cal_v5', this.events); document.getElementById('calNoteIn').value = '';
             this.renderNotes(); this.render();
+            
+            // Veri eklendikten sonra pencereyi otomatik kapatan sihirli vuruş
+            toggleModal('calModal'); 
         },
         renderNotes() {
             const list = document.getElementById('calNoteList');
