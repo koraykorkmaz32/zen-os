@@ -107,7 +107,7 @@
         .meal-input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.7rem; padding: 6px; margin-bottom: 4px; border: none; outline: none; transition: 0.3s; }
         .meal-label { font-size: 0.55rem; opacity: 0.4; display: block; margin-bottom: 2px; }
 
-        @media (max-width: 1024px) {
+       @media (max-width: 1024px) {
             .grid-layout { grid-template-columns: 1fr; gap: 10px; }
             .panel { grid-column: span 1 !important; height: auto; padding: 15px; }
             .meal-table { grid-template-columns: 1fr; }
@@ -115,6 +115,11 @@
             .glass { min-height: 50px; }
             .top-bar { flex-direction: column; gap: 15px; text-align: center; padding: 15px; }
             body { padding: 10px; }
+            
+            /* 🔥 Mobil Takvim Taştı/Kaydı Cerrahi Düzeltmesi */
+            .cal-grid { gap: 4px; }
+            .cal-day { aspect-ratio: auto; min-height: 65px; padding: 8px 2px; border-radius: 12px; }
+            .day-indicators { font-size: 0.95rem; margin-top: 2px; }
         }
     </style>
 </head>
