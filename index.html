@@ -623,11 +623,18 @@ auth.onAuthStateChanged((user) => {
         init() {
             this.active = DB.get('zen_water_v5') || [];
             
-            // HATA BURADA: Eğer zen_water_date yoksa veya bugünden farklıysa, hemen sıfırlıyor!
-            if(localStorage.getItem('zen_water_date') !== new Date().toDateString()) { 
+            // GÜVENLİ KONTROL: Sadece tarih kaydı varsa ve eski güne aitse sıfırla.
+            const savedDate = localStorage.getItem('zen_water_date');
+            const today = new Date().toDateString();
+            
+            if(savedDate && savedDate !== today) { 
                 this.active = []; 
                 DB.set('zen_water_v5', []); 
+            } else if (!savedDate && this.active.length > 0) {
+                 // Eğer buluttan veri gelmiş ama cihazda tarih yoksa (giriş yapılmışsa), bugünü kaydet
+                 localStorage.setItem('zen_water_date', today);
             }
+            
             this.render();
         },
         toggle(i) {
@@ -636,7 +643,16 @@ auth.onAuthStateChanged((user) => {
             localStorage.setItem('zen_water_date', new Date().toDateString()); 
             this.render();
         },
-        // ...
+        render() {
+            const grid = document.getElementById('waterGrid'); grid.innerHTML = '';
+            for(let i=0; i<10; i++){
+                const g = document.createElement('div'); g.className = `glass ${this.active.includes(i)?'active':''}`;
+                g.innerHTML = '<i data-lucide="droplet"></i>'; g.onclick = () => this.toggle(i);
+                grid.appendChild(g);
+            }
+            document.getElementById('waterText').innerText = `${this.active.length * 200} / 2000 ml`; lucide.createIcons();
+        }
+    };
 
     const Life = {
         meals: {}, habits: [],
