@@ -669,9 +669,13 @@ auth.onAuthStateChanged((user) => {
             const tbody = document.getElementById('habitGrid'); tbody.innerHTML = '';
             this.habits.forEach((h, r) => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td><input class="meal-input" style="text-align:left" value="${h.name}" onchange="Life.saveHabitName(${r}, this.value)"></td>`;
+                tr.innerHTML = `<td><input class="meal-input" style="text-align:left" value="${h.name || ''}" onchange="Life.saveHabitName(${r}, this.value)"></td>`;
+                
+                // HATA BURADAYDI - DÜZELTİLDİ: h.c yoksa boş dizi olarak kabul et (|| [])
+                const completedDays = h.c || []; 
+
                 for(let c=0; c<7; c++) {
-                    const active = h.c.includes(c) ? 'checked' : '';
+                    const active = completedDays.includes(c) ? 'checked' : '';
                     tr.innerHTML += `<td><div class="check-box ${active}" onclick="Life.toggleHabit(${r}, ${c})"></div></td>`;
                 }
                 tbody.appendChild(tr);
@@ -680,6 +684,10 @@ auth.onAuthStateChanged((user) => {
         saveHabitName(r, v) { this.habits[r].name = v; DB.set('zen_habits_v3', this.habits); },
         toggleHabit(r, c) {
             const h = this.habits[r];
+            
+            // AYNI GÜVENLİĞİ BURAYA DA EKLEDİK
+            h.c = h.c || []; 
+            
             h.c.includes(c) ? h.c = h.c.filter(x=>x!==c) : h.c.push(c);
             DB.set('zen_habits_v3', this.habits); this.renderHabits();
         }
