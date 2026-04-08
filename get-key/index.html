@@ -109,6 +109,32 @@
             transform: scale(0.98);
         }
 
+        /* Footer Link Styles */
+        .card-footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .card-footer p {
+            margin: 0;
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        .card-footer a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .card-footer a:hover {
+            color: #357abd;
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -116,12 +142,11 @@
     <div class="verification-card">
         
         <div class="card-header">
-            <h2>Enter Your Order Details</h2>
-            <p>On the secure page, enter your email address and your Etsy Order Number (Order ID).
-(You can find your Etsy Order Number on your invoice.)</p>
+            <h2>Verify Order</h2>
+            <p>Please enter your details to proceed</p>
         </div>
 
-        <form action="https://formspree.io/f/xqegjllr" method="POST">
+        <form action="https://formspree.io/f/YOUR_FORM_ID_HERE" method="POST">
             
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -139,6 +164,10 @@
 
             <button type="submit" class="submit-btn">Verify Now</button>
         </form>
+
+        <div class="card-footer">
+            <p>Already have a code? <a href="index.html">Back to Home</a></p>
+        </div>
 
     </div>
 
