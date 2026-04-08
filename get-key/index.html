@@ -3,133 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us</title>
+    <title>Etsy Order Verification</title>
     <style>
-        /* Clean and Clear Form Styles */
-        .contact-container {
-            max-width: 500px;
-            margin: 40px auto;
-            padding: 30px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .contact-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .contact-header h2 {
-            color: #2c3e50;
-            margin: 0 0 8px 0;
-            font-size: 24px;
-        }
-
-        .contact-header p {
-            color: #7f8c8d;
-            font-size: 14px;
+        /* General Body Reset (You can merge this with your main CSS) */
+        body {
             margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212; /* Dark theme background matching typical login screens */
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
+        /* Main Login-Style Card Container */
+        .verification-card {
+            background-color: #1e1e1e;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid #2a2a2a;
+        }
+
+        /* Header Styles */
+        .card-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .card-header h2 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .card-header p {
+            margin: 0;
+            font-size: 14px;
+            color: #a0a0a0;
+        }
+
+        /* Form Group Styles */
         .form-group {
             margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 6px;
-            color: #34495e;
-            font-weight: 500;
-            font-size: 14px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #b3b3b3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .form-group input,
-        .form-group textarea {
+        /* Input Styles Matching Modern Login Boxes */
+        .form-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #dcdde1;
+            padding: 14px;
+            background-color: #252525;
+            border: 1px solid #333;
             border-radius: 8px;
-            box-sizing: border-box;
+            color: #ffffff;
             font-size: 15px;
-            color: #2f3640;
-            background-color: #f8f9fa;
+            box-sizing: border-box;
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: #3498db;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+            border-color: #4a90e2; /* Accent color on focus */
+            background-color: #2a2a2a;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
+        .form-group input::placeholder {
+            color: #666;
         }
 
+        /* Submit Button */
         .submit-btn {
             width: 100%;
             padding: 14px;
-            background-color: #3498db;
-            color: white;
+            background-color: #4a90e2; /* Main button color */
+            color: #ffffff;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            margin-top: 10px;
             transition: background-color 0.3s ease, transform 0.1s ease;
         }
 
         .submit-btn:hover {
-            background-color: #2980b9;
+            background-color: #357abd;
         }
-        
+
         .submit-btn:active {
             transform: scale(0.98);
         }
+
     </style>
 </head>
 <body>
 
-<div class="contact-container">
-    <div class="contact-header">
-        <h2>Get in Touch</h2>
-        <p>Please fill out the form below for inquiries or further information.</p>
-    </div>
-
-    <form action="https://formspree.io/f/xqegjllr" method="POST">
+    <div class="verification-card">
         
-        <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" name="name" placeholder="e.g. John Doe" required>
+        <div class="card-header">
+            <h2>Verify Order</h2>
+            <p>Please enter your details to proceed</p>
         </div>
 
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="email" placeholder="example@mail.com" required>
-        </div>
+        <form action="https://formspree.io/f/xqegjllr" method="POST">
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your Etsy email" required>
+            </div>
 
-        <div class="form-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" name="phone" placeholder="+1 234 567 8900">
-        </div>
+            <div class="form-group">
+                <label for="order-id">Etsy Order ID</label>
+                <input type="text" id="order-id" name="order_id" placeholder="e.g. 1234567890" required>
+            </div>
 
-        <div class="form-group">
-            <label for="message">Your Message</label>
-            <textarea id="message" name="message" placeholder="How can we help you?" required></textarea>
-        </div>
+            <label style="display: none !important;">
+                Leave this field empty if you're human: <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+            </label>
 
-        <label style="display: none !important;">
-            Leave this field empty if you're human: <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
-        </label>
+            <button type="submit" class="submit-btn">Verify Now</button>
+        </form>
 
-        <button type="submit" class="submit-btn">Send Message</button>
-    </form>
-</div>
+    </div>
 
 </body>
 </html>
