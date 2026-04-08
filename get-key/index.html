@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Syncmy.life | Verify Order</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* --- DESIGN VARIABLES --- */
+        :root {
+            --bg: #020617; 
+            --panel: rgba(15, 23, 42, 0.85);
+            --accent: #38bdf8; 
+            --text: #f8fafc; 
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            min-height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            user-select: none; 
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--panel); 
+            backdrop-filter: blur(20px); 
+            border-radius: 28px; 
+            padding: 40px; 
+            border: 1px solid var(--border); 
+            width: 100%; 
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+            position: relative; 
+            overflow: hidden;
+        }
+
+        .auth-header { text-align: center; margin-bottom: 30px; }
+        .auth-header h1 { font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; }
+        .auth-header p { font-size: 0.85rem; opacity: 0.6; margin-top: 5px; line-height: 1.5; }
+
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group i { 
+            position: absolute; 
+            left: 15px; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            color: var(--accent); 
+            opacity: 0.7; 
+            width: 18px; 
+        }
+        
+        .input-field { 
+            width: 100%; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid var(--border); 
+            color: var(--text); 
+            padding: 14px 14px 14px 45px; 
+            border-radius: 14px; 
+            font-family: inherit; 
+            font-size: 0.9rem; 
+            transition: 0.3s; 
+            outline: none;
+        }
+        
+        .input-field:focus { 
+            border-color: var(--accent); 
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); 
+        }
+
+        /* Hide arrows for number inputs (Chrome/Safari/Edge) */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; margin: 0; 
+        }
+
+        .btn-primary { 
+            background: var(--accent); 
+            color: #000; 
+            border: none; 
+            width: 100%; 
+            padding: 14px; 
+            border-radius: 14px; 
+            font-weight: 800; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            margin-top: 10px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+        }
+        
+        .btn-primary:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.3); 
+        }
+        
+        .btn-primary:disabled { 
+            opacity: 0.5; 
+            cursor: not-allowed; 
+            transform: none; 
+            box-shadow: none; 
+        }
+
+        #messageBox { 
+            margin-top: 20px; 
+            padding: 14px; 
+            border-radius: 14px; 
+            text-align: center; 
+            font-size: 0.85rem; 
+            font-weight: 600; 
+            display: none; 
+            border: 1px solid var(--border);
+        }
+        
+        .success { background: rgba(16, 185, 129, 0.1); color: #34d399; border-color: rgba(16, 185, 129, 0.3) !important; }
+        .error { background: rgba(239, 68, 68, 0.1); color: #f87171; border-color: rgba(239, 68, 68, 0.3) !important; }
+
+        .visually-hidden { position: absolute; left: -9999px; }
+        
+        .auth-link { color: var(--accent); cursor: pointer; text-decoration: none; font-weight: 600; }
+        .auth-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="auth-container">
+    <div class="auth-header">
+        <h1>Syncmy.life <span style="font-weight:300; opacity:0.5;">PRO</span></h1>
+        <p>Verify your Etsy order to unlock<br>your license code.</p>
+    </div>
+
+    <form id="verifyForm">
+        <div class="visually-hidden" aria-hidden="true">
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <i data-lucide="mail"></i>
+            <input type="email" id="email" class="input-field" placeholder="Email address" required>
+        </div>
+        
+        <div class="input-group">
+            <i data-lucide="shopping-bag"></i>
+            <input type="text" id="orderId" class="input-field" placeholder="Etsy Order ID" required>
+        </div>
+
+        <div class="input-group">
+            <i data-lucide="shield-check"></i>
+            <input type="number" id="captchaAnswer" class="input-field" required>
+        </div>
+
+        <button type="submit" class="btn-primary" id="submitBtn">Verify Order</button>
+    </form>
+    
+    <div id="messageBox"></div>
+
+    <div style="text-align: center; margin-top: 25px; font-size: 0.85rem; opacity: 0.7;">
+        Already have a license? <a href="index.html" class="auth-link">Sign In</a>
+    </div>
+</div>
+
+<script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Math Captcha Logic
+    let num1, num2, correctAnswer;
+    
+    function generateCaptcha() {
+        num1 = Math.floor(Math.random() * 10) + 1; 
+        num2 = Math.floor(Math.random() * 10) + 1;
+        correctAnswer = num1 + num2;
+        // Elegantly insert the question into the input placeholder
+        document.getElementById('captchaAnswer').placeholder = `Security Check: ${num1} + ${num2} = ?`;
+        document.getElementById('captchaAnswer').value = ''; 
+    }
+
+    // Generate the question on page load
+    window.onload = generateCaptcha;
+
+    // Message Box Function
+    function showMessage(text, type) {
+        const msgBox = document.getElementById('messageBox');
+        msgBox.style.display = 'block';
+        msgBox.className = type; 
+        msgBox.innerHTML = text; // Used innerHTML so icons can be rendered
+        lucide.createIcons(); // Render new icons
+    }
+
+    // Form Submission
+    document.getElementById('verifyForm').addEventListener('submit', async function(e) {
+        e.preventDefault(); 
+
+        const email = document.getElementById('email').value.trim();
+        const orderId = document.getElementById('orderId').value.trim();
+        const honeypot = document.getElementById('website').value;
+        const userAnswer = parseInt(document.getElementById('captchaAnswer').value);
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Bot Check
+        if (honeypot !== "") {
+            showMessage("<i data-lucide='check-circle'></i> Verified successfully.", "success");
+            return; 
+        }
+
+        // Math Check
+        if (userAnswer !== correctAnswer) {
+            showMessage("<i data-lucide='alert-circle'></i> Incorrect math result.", "error");
+            generateCaptcha(); 
+            return;
+        }
+
+        // Lock the button to prevent multiple submissions
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Verifying on Etsy...";
+        document.getElementById('messageBox').style.display = 'none';
+
+        try {
+            // YOUR VERCEL LINK WILL GO HERE
+            const API_URL = 'https://YOUR_VERCEL_PROJECT_LINK.vercel.app/api/verify-order';
+            
+            /* --- UNCOMMENT THIS BLOCK ONCE VERCEL IS READY ---
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, orderId })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                showMessage("<i data-lucide='check-circle'></i> Success! Your license code is generating...", "success");
+                // If successful, you can redirect the user or show the license code here
+            } else {
+                showMessage(`<i data-lucide='x-circle'></i> ${result.message || "Order not found."}`, "error");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Verify Order";
+                generateCaptcha();
+            }
+            ------------------------------------------------- */
+
+            // Temporary waiting simulation for testing frontend (remove when Vercel is connected)
+            setTimeout(() => {
+                showMessage("<i data-lucide='check-circle'></i> Frontend is perfect! Ready for Vercel backend.", "success");
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Verify Order";
+                generateCaptcha();
+            }, 1500);
+
+        } catch (error) {
+            showMessage("<i data-lucide='wifi-off'></i> Server unreachable.", "error");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Verify Order";
+            generateCaptcha();
+        }
+    });
+</script>
+
+</body>
+</html>
