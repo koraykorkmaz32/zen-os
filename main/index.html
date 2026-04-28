@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sync My Life | Dijital Yaşam Asistanınız</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <style>
+        html { scroll-behavior: smooth; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .bg-gradient-custom { 
+            background: linear-gradient(135deg, #0a0f1e 0%, #17102b 50%, #1e1326 100%); 
+        }
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.03); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(236, 72, 153, 0.08);
+        }
+        .glow-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(167, 139, 250, 0.1);
+        }
+        .glow-button:hover {
+            box-shadow: 0 0 30px rgba(167, 139, 250, 0.4);
+            transform: translateY(-2px);
+        }
+        /* Slider Özelleştirme */
+        .swiper { width: 100%; height: auto; padding-bottom: 50px !important; }
+        .swiper-slide { 
+            display: flex; justify-content: center; align-items: center; 
+            border-radius: 24px; overflow: hidden;
+        }
+        .swiper-slide img {
+            max-width: 100%; max-height: 70vh; object-fit: contain;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .swiper-pagination-bullet { background: #f472b6 !important; }
+        .swiper-button-next, .swiper-button-prev { color: #f472b6 !important; }
+    </style>
+</head>
+<body class="bg-gradient-custom text-slate-300 font-light antialiased selection:bg-pink-500 selection:text-white">
+
+    <nav class="fixed w-full z-50 glass-panel border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-3xl font-extrabold tracking-tighter text-white">
+                sync<span class="text-pink-400">my</span>.life
+            </div>
+            <div class="flex items-center gap-3">
+                <a href="http://syncmy.life/" class="text-slate-400 hover:text-white transition-colors px-4 py-2 text-sm font-medium">Giriş Yap</a>
+                <a href="#buy" class="glow-button bg-gradient-to-r from-pink-500 to-indigo-500 text-white px-7 py-2.5 rounded-full font-semibold text-sm transition-all shadow-lg">Şimdi Keşfet</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="min-h-screen flex items-center justify-center pt-28 px-6 relative overflow-hidden">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-pink-500/10 rounded-full blur-[100px]"></div>
+        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px]"></div>
+
+        <div class="max-w-5xl mx-auto text-center relative z-10">
+            <div class="inline-block mb-5 px-5 py-1.5 rounded-full bg-pink-500/10 text-pink-300 text-xs font-bold tracking-widest border border-pink-500/20 uppercase">
+                Artık PDF Kaosu Yok
+            </div>
+            <h1 class="text-6xl md:text-8xl font-extrabold text-white mb-8 leading-tight tracking-tighter">
+                Hayatınızı <br>
+                <span class="bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Zarafetle</span> Yönetin
+            </h1>
+            <p class="text-xl md:text-3xl text-slate-400 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+                Sync My Life, karmaşayı huzura dönüştüren interaktif bir yaşam dashboard'udur. Statik dosyaları unutun; PC, tablet veya telefondan erişin, hayatınız her an sizinle senkronize olsun.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6">
+                <a href="#buy" class="glow-button bg-white text-slate-950 px-10 py-5 rounded-2xl font-bold text-lg transition-all shadow-2xl flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-crown text-pink-500"></i> Hemen Sahip Ol
+                </a>
+                <a href="#features" class="glass-panel text-white px-10 py-5 rounded-2xl font-bold text-lg hover:bg-white/5 transition-all border border-white/10">
+                    Özellikleri İncele
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-28 px-6 relative bg-slate-950/30">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-20">
+                <h2 class="text-5xl font-extrabold text-white mb-5 tracking-tight">Sıradan Bir Planlayıcı Değil</h2>
+                <p class="text-slate-400 text-xl font-light max-w-2xl mx-auto">Sizin kadar dinamik, sizin kadar şık. Hayatınızın her detayını düşünen zeki bir sistem.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="glass-panel p-10 rounded-3xl border border-white/5 flex gap-8 items-start hover:border-pink-500/20 transition-colors group">
+                    <div class="w-16 h-16 bg-pink-500/10 rounded-2xl flex items-center justify-center border border-pink-500/20 text-pink-400 text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Sonsuz Senkronizasyon</h3>
+                        <p class="text-slate-400 leading-relaxed">"Dosyayı kaydettim mi?" derdi bitti. Evde bilgisayarınızdan planlayın, markette telefonunuzdan işaretleyin. Tüm cihazlarda anında, akışkan senkronizasyon.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 rounded-3xl border border-white/5 flex gap-8 items-start hover:border-indigo-500/20 transition-colors group">
+                    <div class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center border border-indigo-500/20 text-indigo-400 text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-fingerprint"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">%100 Size Özel & Güvenli</h3>
+                        <p class="text-slate-400 leading-relaxed">Hayatınız sadece sizi ilgilendirir. Sync My Life, PDF gibi ortada dolaşmaz; kendi benzersiz şifrenizle korunan, size ait güvenli bir dijital alandır.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 rounded-3xl border border-white/5 flex gap-8 items-start hover:border-cyan-500/20 transition-colors group">
+                    <div class="w-16 h-16 bg-cyan-500/10 rounded-2xl flex items-center justify-center border border-cyan-500/20 text-cyan-400 text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Zihinsel Esenlik & Odak</h3>
+                        <p class="text-slate-400 leading-relaxed">Sadece görevleri değil, kendinizi de takip edin. Entegre Pomodoro ile odaklanın, Su Takibi ile tazelenin ve Günlük Motivasyon ile ruhunuzu besleyin.</p>
+                    </div>
+                </div>
+                <div class="glass-panel p-10 rounded-3xl border border-white/5 flex gap-8 items-start hover:border-orange-500/20 transition-colors group">
+                    <div class="w-16 h-16 bg-orange-500/10 rounded-2xl flex items-center justify-center border border-orange-500/20 text-orange-400 text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-chart-pie"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Complete Finansal Hakimiyet</h3>
+                        <p class="text-slate-400 leading-relaxed">Harcamalarınızı anında kaydedin. Gelişmiş Bütçe Takipçisi ile paranızın nereye gittiğini görün, finansal hedeflerinize zarafetle ulaşın.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 px-6 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-white mb-4">Arayüzü Keşfedin</h2>
+                <p class="text-slate-400 italic">Sizin için hazırladığımız bazı görünümler</p>
+            </div>
+            
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="71Yy8v6Y9hL.png" alt="Dashboard 1"></div>
+                    <div class="swiper-slide"><img src="81x1C6U6S+L.png" alt="Dashboard 2"></div>
+                    <div class="swiper-slide"><img src="81iGbe1V0HL.png" alt="Dashboard 3"></div>
+                    <div class="swiper-slide"><img src="81+7eH380aL.png" alt="Dashboard 4"></div>
+                    <div class="swiper-slide"><img src="81rY4tA2aDL.png" alt="Dashboard 5"></div>
+                    <div class="swiper-slide"><img src="71D0Y7q0nPL.png" alt="Dashboard 6"></div>
+                    <div class="swiper-slide"><img src="719f+2u8S5L.png" alt="Dashboard 7"></div>
+                    <div class="swiper-slide"><img src="81k467PqH+L.png" alt="Dashboard 8"></div>
+                    <div class="swiper-slide"><img src="51wN0o0pI2L.png" alt="Dashboard 9"></div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="buy" class="py-32 px-6 relative">
+        <div class="absolute inset-0 bg-pink-500/5 blur-[120px] rounded-full transform scale-50"></div>
+        <div class="max-w-4xl mx-auto glass-panel rounded-[40px] p-12 md:p-20 text-center border-pink-500/10 relative z-10">
+            <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight">
+                Yeni Hayatınız <br>
+                <span class="bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Tek Bir Tık</span> Uzakta
+            </h2>
+            <p class="text-xl text-slate-300 mb-12 max-w-2xl mx-auto leading-relaxed italic">Hayatınızı organize etmek hiç bu kadar şık olmamıştı.</p>
+            <a href="https://www.etsy.com/listing/4486575071/early-bird-digital-planner-dashboard-all?ref=shop_home_active_1&dd=1&logging_key=a9afa6db9547528642402fcd23b2fd7199bc58f7%3A4486575071" target="_blank" class="glow-button inline-block bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-extrabold text-2xl px-16 py-6 rounded-full shadow-2xl transition-all">
+                Etsy'den Güvenle Satın Al <i class="fa-solid fa-arrow-right ml-3"></i>
+            </a>
+            <div class="mt-10 flex justify-center gap-8 text-sm text-slate-500 uppercase font-bold tracking-widest">
+                <span>Ömür Boyu Erişim</span>
+                <span>Abonelik Yok</span>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-10 text-center text-slate-600 border-t border-white/5">
+        <p class="mb-2 text-lg font-bold text-slate-500">syncmy.life</p>
+        <p>&copy; 2026. Tüm hakları saklıdır. Hayatınızı optimize edin.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        var swiper = new Swiper(".mySwiper", {
+            effect: "coverflow",
+            grabCursor: true,
+            centeredSlides: true,
+            slidesPerView: "auto",
+            autoplay: {
+                delay: 3000,
+                disableOnInteraction: false,
+            },
+            coverflowEffect: {
+                rotate: 20,
+                stretch: 0,
+                depth: 200,
+                modifier: 1,
+                slideShadows: true,
+            },
+            pagination: {
+                el: ".swiper-pagination",
+                clickable: true,
+            },
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+            breakpoints: {
+                320: { slidesPerView: 1.2, spaceBetween: 20 },
+                768: { slidesPerView: 1.5, spaceBetween: 30 },
+                1024: { slidesPerView: 1.8, spaceBetween: 40 }
+            }
+        });
+    </script>
+</body>
+</html>
