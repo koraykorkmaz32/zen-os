@@ -3,30 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Etsy Order Verification</title>
+    <title>Contact Us</title>
     <style>
+        /* Pro CSS Variables for easy theming */
+        :root {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --border-color: #2a2a2a;
+            --input-bg: #252525;
+            --input-border: #333333;
+            --primary: #4a90e2;
+            --primary-hover: #357abd;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --text-label: #b3b3b3;
+            --success: #2e7d32;
+            --error: #d32f2f;
+        }
+
         /* General Body Reset */
         body {
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #121212; 
-            color: #ffffff;
+            background-color: var(--bg-body); 
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
         }
 
-        /* Main Login-Style Card Container */
-        .verification-card {
-            background-color: #1e1e1e;
+        /* Main Contact Card Container */
+        .contact-card {
+            background-color: var(--bg-card);
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             padding: 40px 30px;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--border-color);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Header Styles */
@@ -37,15 +59,16 @@
 
         .card-header h2 {
             margin: 0 0 10px 0;
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .card-header p {
             margin: 0;
             font-size: 14px;
-            color: #a0a0a0;
+            color: var(--text-muted);
+            line-height: 1.5;
         }
 
         /* Form Group Styles */
@@ -56,146 +79,251 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-size: 13px;
-            color: #b3b3b3;
+            font-size: 12px;
+            color: var(--text-label);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
+            font-weight: 600;
         }
 
-        /* Input Styles */
-        .form-group input {
+        /* Input & Textarea Styles */
+        .form-group input,
+        .form-group textarea {
             width: 100%;
             padding: 14px;
-            background-color: #252525;
-            border: 1px solid #333;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 8px;
-            color: #ffffff;
+            color: var(--text-main);
             font-size: 15px;
             box-sizing: border-box;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
-        .form-group input:focus {
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
             outline: none;
-            border-color: #4a90e2; 
-            background-color: #2a2a2a;
-            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+            border-color: var(--primary); 
+            background-color: var(--border-color);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
         }
 
-        .form-group input::placeholder {
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
             color: #666;
+        }
+
+        /* Status Message Container */
+        .status-message {
+            display: none;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .status-message.success {
+            background-color: rgba(46, 125, 50, 0.2);
+            color: #4caf50;
+            border: 1px solid var(--success);
+        }
+
+        .status-message.error {
+            background-color: rgba(211, 47, 47, 0.2);
+            color: #ff5252;
+            border: 1px solid var(--error);
         }
 
         /* Submit Button */
         .submit-btn {
             width: 100%;
             padding: 14px;
-            background-color: #4a90e2; 
-            color: #ffffff;
+            background-color: var(--primary); 
+            color: var(--text-main);
             border: none;
             border-radius: 8px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease, transform 0.1s ease;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
         }
 
-        .submit-btn:hover {
-            background-color: #357abd;
+        .submit-btn:hover:not(:disabled) {
+            background-color: var(--primary-hover);
         }
 
-        .submit-btn:active {
+        .submit-btn:active:not(:disabled) {
             transform: scale(0.98);
         }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Spinner Animation */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .submit-btn.loading .spinner { display: block; }
+        .submit-btn.loading .btn-text { display: none; }
 
         /* Footer Link Styles */
         .card-footer {
             text-align: center;
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 1px solid #2a2a2a;
+            border-top: 1px solid var(--border-color);
         }
 
         .card-footer p {
             margin: 0;
             font-size: 14px;
-            color: #a0a0a0;
+            color: var(--text-muted);
         }
 
         .card-footer a {
-            color: #4a90e2;
+            color: var(--primary);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s ease;
         }
 
         .card-footer a:hover {
-            color: #357abd;
+            color: var(--primary-hover);
             text-decoration: underline;
         }
-
     </style>
 </head>
 <body>
 
-    <div class="verification-card">
+    <main class="contact-card">
         
-        <div class="card-header">
-            <h2>Enter Your Order Details</h2>
-            <p>On the secure page, enter your email address and your Etsy Order Number (Order ID).</p>
-            <p>(You can find your Etsy Order Number on your invoice.)</p>
-        </div>
+        <header class="card-header">
+            <h2>Contact Us</h2>
+            <p>Have a question or feedback? Fill out the form below and we'll get back to you shortly.</p>
+        </header>
 
-        <form id="verifyForm" action="https://formspree.io/f/xqegjllr" method="POST">
+        <form id="contactForm" action="https://formspree.io/f/xqegjllr" method="POST">
             
             <div class="form-group">
-                <label for="email">Email Address</label>
-                <input type="email" id="email" name="email" placeholder="Enter your Etsy email" required>
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
             </div>
 
             <div class="form-group">
-                <label for="order-id">Etsy Order ID</label>
-                <input type="text" id="order-id" name="order_id" placeholder="e.g. 1234567890" required>
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="john@example.com" required autocomplete="email">
             </div>
 
+            <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" placeholder="How can we help you today?" required></textarea>
+            </div>
+
+            <!-- Formspree Spam Protection -->
             <label style="display: none !important;">
                 Leave this field empty if you're human: <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
             </label>
 
-            <button type="submit" class="submit-btn">Verify Now</button>
+            <!-- Inline Status Message -->
+            <div id="statusMessage" class="status-message" aria-live="polite"></div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span class="btn-text">Send Message</span>
+                <span class="spinner"></span>
+            </button>
         </form>
 
-        <div class="card-footer">
-            <p>Already have a code? <a href="http://syncmy.life">Back to Home</a></p>
-        </div>
+        <footer class="card-footer">
+            <p><a href="http://syncmy.life">&larr; Back to Home</a></p>
+        </footer>
 
-    </div>
+    </main>
 
     <script>
-        var form = document.getElementById("verifyForm");
-        
-        form.addEventListener("submit", function(event) {
-            event.preventDefault(); // Formspree'nin kendi sayfasına gitmesini engeller
+        const form = document.getElementById("contactForm");
+        const submitBtn = document.getElementById("submitBtn");
+        const statusMessage = document.getElementById("statusMessage");
+
+        // Professional UI Status Handler
+        const showStatus = (message, type) => {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = "block";
+        };
+
+        form.addEventListener("submit", async function(event) {
+            event.preventDefault(); 
             
-            var data = new FormData(form);
+            // Set loading state
+            submitBtn.disabled = true;
+            submitBtn.classList.add("loading");
+            statusMessage.style.display = "none";
             
-            fetch(form.action, {
-                method: form.method,
-                body: data,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }).then(response => {
+            const formData = new FormData(form);
+            
+            try {
+                // Modern fetch with async/await
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
                 if (response.ok) {
-                    // Mesaj başarıyla gittiğinde anında ana sayfana yönlendirir
-                    window.location.href = "http://syncmy.life";
+                    showStatus("Message sent successfully! Redirecting...", "success");
+                    form.reset();
+                    
+                    // Delay the redirect slightly so the user can read the success message
+                    setTimeout(() => {
+                        window.location.href = "http://syncmy.life";
+                    }, 1500);
                 } else {
-                    alert("Oops! There was a problem submitting your form");
+                    // Handle specific Formspree validation errors if available
+                    const data = await response.json();
+                    if (Object.hasOwn(data, 'errors')) {
+                        const errorMsg = data.errors.map(error => error.message).join(", ");
+                        showStatus(errorMsg, "error");
+                    } else {
+                        showStatus("Oops! There was a problem submitting your form.", "error");
+                    }
+                    
+                    // Revert button state on error
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove("loading");
                 }
-            }).catch(error => {
-                alert("Oops! There was a problem submitting your form");
-            });
+            } catch (error) {
+                showStatus("Network error. Please check your connection and try again.", "error");
+                submitBtn.disabled = false;
+                submitBtn.classList.remove("loading");
+            }
         });
     </script>
 
